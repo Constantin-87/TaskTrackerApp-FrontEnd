@@ -17,6 +17,7 @@ const UserForm = ({
   const [newPassword, setNewPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState("");
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   // Only pre-fill form fields if in edit mode and `user` data is available
   useEffect(() => {
@@ -34,7 +35,7 @@ const UserForm = ({
       const fetchRoles = async () => {
         const token = sessionStorage.getItem("authToken");
         try {
-          const response = await axios.get("http://localhost:4000/api/users", {
+          const response = await axios.get(`${baseUrl}/api/users`, {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
           });
@@ -45,7 +46,7 @@ const UserForm = ({
       };
       fetchRoles();
     }
-  }, [isAdmin, roles.length]);
+  }, [baseUrl, isAdmin, roles.length]);
 
   const validateInputs = () => {
     // Reset any previous errors
@@ -129,8 +130,8 @@ const UserForm = ({
         {isEditMode
           ? `Edit User - ${user.first_name || ""} ${user.last_name || ""}`
           : isAdmin
-          ? "Add User"
-          : "Sign Up"}
+            ? "Add User"
+            : "Sign Up"}
       </h2>
 
       {/* Display ErrorMessage component with any error text */}

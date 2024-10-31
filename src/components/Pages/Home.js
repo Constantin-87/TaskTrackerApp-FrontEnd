@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import AccordionItem from "../Shared/AccordionItem";
@@ -10,11 +10,12 @@ const Home = () => {
   const navigate = useNavigate();
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const location = useLocation();
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       const token = sessionStorage.getItem("authToken");
-      const response = await axios.get("http://localhost:4000/api/tasks", {
+      const response = await axios.get(`${baseUrl}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,7 +28,7 @@ const Home = () => {
       console.error("Error fetching tasks:", error);
       setError("Failed to load tasks");
     }
-  };
+  }, [baseUrl]);
 
   useEffect(() => {
     fetchTasks();
@@ -38,14 +39,14 @@ const Home = () => {
     if (taskId) {
       setExpandedTaskId(Number(taskId));
     }
-  }, [location]);
+  }, [fetchTasks, location]);
 
   // Function to update task status
   const updateTaskStatus = async (taskId, newStatus) => {
     try {
       const token = sessionStorage.getItem("authToken");
       await axios.put(
-        `http://localhost:4000/api/tasks/${taskId}`,
+        `${baseUrl}/api/tasks/${taskId}`,
         { task: { status: newStatus } },
         {
           headers: {

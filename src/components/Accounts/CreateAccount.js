@@ -10,6 +10,7 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   // Determine whether the page was accessed from the AdminPage or LoginPage
   const fromAdminPage = location.state?.fromAdminPage || false;
@@ -27,7 +28,7 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:4000/api/users",
+        `${baseUrl}/api/users`,
         { user: formData },
         {
           headers: headers,

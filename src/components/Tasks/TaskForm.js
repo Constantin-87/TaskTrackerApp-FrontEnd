@@ -19,20 +19,18 @@ const TaskForm = () => {
   const { id } = useParams(); // For edit case
   const navigate = useNavigate();
   const location = useLocation();
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     const fetchBoardsAndTask = async () => {
       try {
         const token = sessionStorage.getItem("authToken");
         // Fetch boards
-        const boardResponse = await axios.get(
-          "http://localhost:4000/api/boards",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const boardResponse = await axios.get(`${baseUrl}/api/boards`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setBoards(boardResponse.data.boards);
 
         // Extract board_id from the query string if not editing
@@ -45,14 +43,11 @@ const TaskForm = () => {
         }
 
         const taskId = id || -1; // Use -1 if creating a new task
-        const taskResponse = await axios.get(
-          `http://localhost:4000/api/tasks/${taskId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const taskResponse = await axios.get(`${baseUrl}/api/tasks/${taskId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         // For new task, fetch only status and priority options
         if (id) {
@@ -73,7 +68,7 @@ const TaskForm = () => {
     };
 
     fetchBoardsAndTask();
-  }, [id, location.search]);
+  }, [baseUrl, id, location.search]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +105,7 @@ const TaskForm = () => {
 
       if (id) {
         await axios.put(
-          `http://localhost:4000/api/tasks/${id}`,
+          `${baseUrl}/api/tasks/${id}`,
           {
             task: taskData,
           },
@@ -123,7 +118,7 @@ const TaskForm = () => {
         setFlashMessage("Task updated successfully!");
       } else {
         await axios.post(
-          "http://localhost:4000/api/tasks",
+          `${baseUrl}/api/tasks`,
           {
             task: taskData,
           },

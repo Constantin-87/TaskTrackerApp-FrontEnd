@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
+  const wsUrl = baseUrl.replace(/^http/, "ws");
 
   useEffect(() => {
     // WebSocket connection for real-time notifications
-    const ws = new WebSocket("ws://localhost:4000/api/notifications");
+    const ws = new WebSocket(`${wsUrl}/api/api/notifications`);
 
     ws.onopen = () => {
       console.log("Connected to WebSocket for notifications");
@@ -28,7 +30,7 @@ const Notifications = () => {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [wsUrl]);
 
   // Function to extract task ID from notification message
   const extractTaskId = (message) => {
@@ -48,16 +50,12 @@ const Notifications = () => {
   const markAsRead = async (notificationId) => {
     try {
       const token = sessionStorage.getItem("authToken");
-      await axios.put(
-        `http://localhost:4000/api/notifications/${notificationId}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
+      await axios.put(`${baseUrl}/api/notifications/${notificationId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
 
       // Remove the notification from the list after marking as read
       setNotifications((prev) =>

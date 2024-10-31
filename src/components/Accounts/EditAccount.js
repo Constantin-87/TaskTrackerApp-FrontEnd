@@ -11,6 +11,7 @@ const EditAccount = ({ currentUser }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     // Check if the user has permission to edit the account
@@ -29,15 +30,12 @@ const EditAccount = ({ currentUser }) => {
           return;
         }
 
-        const response = await axios.get(
-          `http://localhost:4000/api/users/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
-            },
-            withCredentials: true, // Ensure credentials are sent with the request
-          }
-        );
+        const response = await axios.get(`${baseUrl}/api/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
+          },
+          withCredentials: true, // Ensure credentials are sent with the request
+        });
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -52,7 +50,7 @@ const EditAccount = ({ currentUser }) => {
     const token = sessionStorage.getItem("authToken"); // Retrieve token
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/users/${id}`,
+        `${baseUrl}/api/users/${id}`,
         {
           user: formData,
         },

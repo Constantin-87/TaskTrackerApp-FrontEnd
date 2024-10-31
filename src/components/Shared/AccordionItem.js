@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 const AccordionItem = ({ title, children, isExpanded, onToggle }) => {
   useEffect(() => {
     console.log(`AccordionItem for ${title} - isExpanded: ${isExpanded}`);
-  }, [isExpanded]);
+  }, [isExpanded, title]);
 
   return (
     <div className="accordion-item">

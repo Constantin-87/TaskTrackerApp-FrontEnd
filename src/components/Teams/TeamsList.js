@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
 
@@ -9,6 +9,7 @@ const TeamsList = () => {
   const [error, setError] = useState(null);
   const [flashMessage, setFlashMessage] = useState("");
   const navigate = useNavigate();
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -16,7 +17,7 @@ const TeamsList = () => {
         // Get the JWT token from sessionStorage
         const token = sessionStorage.getItem("authToken");
 
-        const response = await axios.get("http://localhost:4000/api/teams", {
+        const response = await axios.get(`${baseUrl}/api/teams`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
           },
@@ -27,7 +28,7 @@ const TeamsList = () => {
       }
     };
     fetchTeams();
-  }, []);
+  }, [baseUrl]);
 
   const handleDelete = async (teamId) => {
     if (window.confirm("Are you sure you want to delete this team?")) {
@@ -35,7 +36,7 @@ const TeamsList = () => {
         // Get the JWT token from sessionStorage
         const token = sessionStorage.getItem("authToken");
 
-        await axios.delete(`http://localhost:4000/api/teams/${teamId}`, {
+        await axios.delete(`${baseUrl}/api/teams/${teamId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
           },

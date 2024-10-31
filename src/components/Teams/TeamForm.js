@@ -7,8 +7,8 @@ import FlashMessage from "../Shared/FlashMessage";
 const TeamForm = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [users, setUsers] = useState([]); // All available users
-  const [boards, setBoards] = useState([]); // All available boards
+  const [, setUsers] = useState([]); // All available users
+  const [, setBoards] = useState([]); // All available boards
   const [assignedUsers, setAssignedUsers] = useState([]); // Assigned users
   const [unassignedUsers, setUnassignedUsers] = useState([]); // Unassigned users
   const [assignedBoards, setAssignedBoards] = useState([]); // Assigned boards
@@ -17,29 +17,24 @@ const TeamForm = () => {
   const [flashMessage, setFlashMessage] = useState("");
   const { id } = useParams(); // For edit case
   const navigate = useNavigate();
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("authToken");
 
-        const userResponse = await axios.get(
-          "http://localhost:4000/api/users",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const userResponse = await axios.get(`${baseUrl}/api/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        const boardResponse = await axios.get(
-          "http://localhost:4000/api/boards",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const boardResponse = await axios.get(`${baseUrl}/api/boards`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const allUsers = userResponse.data.users;
         const allBoards = boardResponse.data.boards;
@@ -48,14 +43,11 @@ const TeamForm = () => {
         setBoards(Array.isArray(allBoards) ? allBoards : []);
 
         if (id) {
-          const teamResponse = await axios.get(
-            `http://localhost:4000/api/teams/${id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const teamResponse = await axios.get(`${baseUrl}/api/teams/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           setName(teamResponse.data.name);
           setDescription(teamResponse.data.description);
@@ -84,7 +76,7 @@ const TeamForm = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [baseUrl, id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +92,7 @@ const TeamForm = () => {
 
       if (id) {
         await axios.put(
-          `http://localhost:4000/api/teams/${id}`,
+          `${baseUrl}/api/teams/${id}`,
           {
             team: teamData,
           },
@@ -113,7 +105,7 @@ const TeamForm = () => {
         setFlashMessage("Team updated successfully!");
       } else {
         await axios.post(
-          "http://localhost:4000/api/teams",
+          `${baseUrl}/api/teams`,
           {
             team: teamData,
           },

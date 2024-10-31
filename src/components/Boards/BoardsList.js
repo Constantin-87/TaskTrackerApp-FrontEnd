@@ -6,13 +6,14 @@ import axios from "axios";
 const BoardsList = () => {
   const [boards, setBoards] = useState([]);
   const [error, setError] = useState(null);
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     // Fetch boards from the backend
     const fetchBoards = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/boards");
-        setBoards(response.data.boards); // Assuming your API returns { boards: [...] }
+        const response = await axios.get(`${baseUrl}/api/boards`);
+        setBoards(response.data.boards);
       } catch (err) {
         setError("Error fetching boards");
       }

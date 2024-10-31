@@ -1,0 +1,51 @@
+name: Deploy to Test Environment
+
+on:
+  workflow_run:
+    workflows: ["Run Integration Tests"]
+    types:
+      - completed
+
+jobs:
+  deploy-test:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.17.0"
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build the React app
+        run: |
+          npm run build
+
+      - name: Deploy to Test EC2
+        env:
+          EC2_HOST: ${{ vars.TEST_EC2_HOST }}
+          EC2_USER: ${{ vars.EC2_USER }}
+          EC2_PATH_FRONTEND: ${{ vars.EC2_PATH_FRONTEND }}
+          REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
+          REACT_APP_API_PORT: ${{ vars.REACT_APP_API_PORT }}
+          EC2_SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          echo "$EC2_SSH_KEY" > ssh_key.pem
+          chmod 600 ssh_key.pem
+          rsync -avz --no-perms --no-owner --chmod=755 --no-group --exclude 'node_modules' --exclude '.git' -e "ssh -i ssh_key.pem -o StrictHostKeyChecking=no" ./build "${EC2_USER}@${EC2_HOST}:${EC2_PATH_FRONTEND}"
+          ssh -o StrictHostKeyChecking=no -i ssh_key.pem "${EC2_USER}@${EC2_HOST}" << EOF
+            set -e
+            cd ${EC2_PATH_FRONTEND}
+            sudo systemctl restart nginx # Or any server you are using
+          EOF
+        shell: bash
+
+      - name: Clean up
+        run: rm -f ssh_key.pem

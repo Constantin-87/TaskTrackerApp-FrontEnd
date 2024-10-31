@@ -13,13 +13,14 @@ const CreateBoard = () => {
   const [error, setError] = useState(null);
   const [flashMessage, setFlashMessage] = useState("");
   const navigate = useNavigate();
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     // Fetch teams for selection
     const fetchTeams = async () => {
       try {
         const token = sessionStorage.getItem("authToken"); // Retrieve the token for authentication
-        const response = await axios.get("http://localhost:4000/api/teams", {
+        const response = await axios.get(`${baseUrl}/api/teams`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the request headers
           },
@@ -38,7 +39,7 @@ const CreateBoard = () => {
     };
 
     fetchTeams();
-  }, []);
+  }, [baseUrl]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +62,7 @@ const CreateBoard = () => {
       const token = sessionStorage.getItem("authToken"); // Retrieve the JWT token from sessionStorage
 
       const response = await axios.post(
-        "http://localhost:4000/api/boards",
+        `${baseUrl}/api/boards`,
         {
           board: {
             name,

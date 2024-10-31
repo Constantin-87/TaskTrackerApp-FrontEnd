@@ -9,12 +9,13 @@ const AdminPage = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
-  // Add this useEffect to reset the success message after 3 seconds
+  // Reset the success message after 3 seconds
   useEffect(() => {
     if (showSuccessMessage) {
       const timer = setTimeout(() => {
-        setShowSuccessMessage(false); // Reset the success message after 3 seconds
+        setShowSuccessMessage(false);
       }, 3000);
 
       return () => clearTimeout(timer); // Cleanup the timer
@@ -24,13 +25,13 @@ const AdminPage = () => {
   useEffect(() => {
     // Fetch all users
     const fetchUsers = async () => {
-      const token = sessionStorage.getItem("authToken"); // Retrieve the token from sessionStorage
+      const token = sessionStorage.getItem("authToken");
       try {
-        const response = await axios.get("http://localhost:4000/api/users", {
+        const response = await axios.get(`${baseUrl}/api/users`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // Ensure credentials are sent with the request
+          withCredentials: true,
         });
         setUsers(response.data.users);
       } catch (error) {
@@ -42,7 +43,7 @@ const AdminPage = () => {
       }
     };
     fetchUsers();
-  }, []);
+  }, [baseUrl]);
 
   const handleCreateUser = () => {
     // Redirect to the CreateAccount page and indicate that it's being accessed from the Admin page
@@ -58,7 +59,7 @@ const AdminPage = () => {
     const token = sessionStorage.getItem("authToken");
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`http://localhost:4000/api/users/${userId}`, {
+        await axios.delete(`${baseUrl}/api/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
           },

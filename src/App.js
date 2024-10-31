@@ -22,7 +22,6 @@ import TaskForm from "./components/Tasks/TaskForm";
 import ErrorMessage from "./components/Shared/ErrorMessage";
 import AdminPage from "./components/Pages/AdminPage";
 import Notifications from "./components/Shared/Notifications";
-axios.defaults.baseURL = "http://localhost:4000";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,13 +29,13 @@ function App() {
   const [boards, setBoards] = useState([]); // Store board data
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state to prevent premature redirects
-
   const showError = error ? <ErrorMessage message={error} /> : null;
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   // Function to fetch boards
   const fetchBoards = async (token) => {
     try {
-      const response = await axios.get("http://localhost:4000/api/boards", {
+      const response = await axios.get(`${baseUrl}/api/boards`, {
         headers: {
           Authorization: `Bearer ${token}`, // Use token from sessionStorage
         },
@@ -70,7 +69,7 @@ function App() {
   const loginUser = async (email, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/users/sign_in",
+        `${baseUrl}/users/sign_in`,
         {
           user: { email, password },
         },
@@ -114,12 +113,9 @@ function App() {
   // Define the logout function
   const logoutUser = async () => {
     try {
-      const response = await axios.delete(
-        "http://localhost:4000/users/sign_out",
-        {
-          withCredentials: true, // Ensure cookies are sent with the request
-        }
-      );
+      const response = await axios.delete(`${baseUrl}/users/sign_out`, {
+        withCredentials: true, // Ensure cookies are sent with the request
+      });
       if (response.status === 200) {
         setIsAuthenticated(false);
         sessionStorage.removeItem("authToken"); // Clear token from sessionStorage

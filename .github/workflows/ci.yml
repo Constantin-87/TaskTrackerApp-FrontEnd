@@ -1,0 +1,30 @@
+name: Run Integration Tests
+
+on:
+  push:
+    branches:
+      - master # Adjust as needed
+  pull_request:
+    branches:
+      - master # Adjust as needed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16" # Ensure it matches your project’s version
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run tests
+        run: |
+          npm test
