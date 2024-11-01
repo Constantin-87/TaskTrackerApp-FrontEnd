@@ -28,7 +28,7 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
       }
 
       const response = await axios.post(
-        `${baseUrl}/api/users`,
+        `/api/users`,
         { user: formData },
         {
           headers: headers,

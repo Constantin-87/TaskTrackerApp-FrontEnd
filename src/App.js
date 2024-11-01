@@ -35,7 +35,7 @@ function App() {
   // Function to fetch boards
   const fetchBoards = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/api/boards`, {
+      const response = await axios.get(`/api/boards`, {
         headers: {
           Authorization: `Bearer ${token}`, // Use token from sessionStorage
         },
