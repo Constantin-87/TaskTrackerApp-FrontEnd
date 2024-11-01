@@ -1,8 +1,14 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
+test("renders login page by default", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  // Use getByRole to specify the heading element to avoid ambiguity with the button
+  const loginHeading = screen.getByRole("heading", { name: /login/i });
+  expect(loginHeading).toBeInTheDocument();
+
+  // Check for email and password input fields
+  expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
+  expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
 });
