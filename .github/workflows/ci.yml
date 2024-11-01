@@ -26,6 +26,10 @@ jobs:
         run: |
           npm install
 
+      - name: Clear Jest Cache
+        run: |
+          npx jest --clearCache
+
       - name: Run tests
         run: |
           npm test
