@@ -1,12 +1,13 @@
 name: Run Integration Tests
 
 on:
-  push:
-    branches:
-      - master # Adjust as needed
   pull_request:
-    branches:
-      - master # Adjust as needed
+  push:
+    branches-ignore: []
+
+permissions:
+  actions: write
+  contents: read
 
 jobs:
   test:
@@ -19,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16" # Ensure it matches your project’s version
+          node-version: "20"
 
       - name: Install dependencies
         run: |

@@ -1,4 +1,4 @@
-name: Deploy to Test Environment
+name: Deploy to EC2 Environment
 
 on:
   workflow_run:
@@ -30,7 +30,7 @@ jobs:
 
       - name: Deploy to Test EC2
         env:
-          EC2_HOST: ${{ vars.TEST_EC2_HOST }}
+          EC2_HOST: ${{ vars.EC2_HOST }}
           EC2_USER: ${{ vars.EC2_USER }}
           EC2_PATH_FRONTEND: ${{ vars.EC2_PATH_FRONTEND }}
           REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
@@ -43,7 +43,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ssh_key.pem "${EC2_USER}@${EC2_HOST}" << EOF
             set -e
             cd ${EC2_PATH_FRONTEND}
-            sudo systemctl restart nginx # Or any server you are using
+            sudo systemctl restart nginx
           EOF
         shell: bash
 
