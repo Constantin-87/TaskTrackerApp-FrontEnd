@@ -11,6 +11,7 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
+  console.log("base url", baseUrl);
 
   // Determine whether the page was accessed from the AdminPage or LoginPage
   const fromAdminPage = location.state?.fromAdminPage || false;

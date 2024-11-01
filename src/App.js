@@ -69,7 +69,7 @@ function App() {
   const loginUser = async (email, password) => {
     try {
       const response = await axios.post(
-        `${baseUrl}/users/sign_in`,
+        `/users/sign_in`,
         {
           user: { email, password },
         },
