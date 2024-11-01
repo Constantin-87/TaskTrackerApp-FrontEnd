@@ -20,7 +20,7 @@ const BoardsList = () => {
     };
 
     fetchBoards();
-  }, []);
+  }, [baseUrl]);
 
   return (
     <div>

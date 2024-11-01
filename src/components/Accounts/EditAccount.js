@@ -44,7 +44,7 @@ const EditAccount = ({ currentUser }) => {
     };
 
     fetchUserData();
-  }, [id, currentUser, navigate]);
+  }, [id, currentUser, navigate, baseUrl]);
 
   const handleEdit = async (formData) => {
     const token = sessionStorage.getItem("authToken"); // Retrieve token
