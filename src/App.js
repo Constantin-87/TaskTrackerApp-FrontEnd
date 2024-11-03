@@ -30,7 +30,6 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state to prevent premature redirects
   const showError = error ? <ErrorMessage message={error} /> : null;
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   // Function to fetch boards
   const fetchBoards = async (token) => {
@@ -69,7 +68,7 @@ function App() {
   const loginUser = async (email, password) => {
     try {
       const response = await axios.post(
-        `/users/sign_in`,
+        `/api/users/sign_in`,
         {
           user: { email, password },
         },
@@ -113,7 +112,7 @@ function App() {
   // Define the logout function
   const logoutUser = async () => {
     try {
-      const response = await axios.delete(`${baseUrl}/users/sign_out`, {
+      const response = await axios.delete(`/api/users/sign_out`, {
         withCredentials: true, // Ensure cookies are sent with the request
       });
       if (response.status === 200) {
