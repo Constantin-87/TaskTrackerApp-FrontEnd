@@ -16,15 +16,13 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
 
   const handleCreateUser = async (formData) => {
     try {
-      let headers = {};
+      // Define headers and include token only if isAdmin is true and token is available
+      const headers =
+        isAdmin && sessionStorage.getItem("authToken")
+          ? { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` }
+          : {};
 
-      // Include JWT token in headers if the current user is an admin
-      if (isAdmin) {
-        const token = sessionStorage.getItem("authToken");
-        headers = {
-          Authorization: `Bearer ${token}`,
-        };
-      }
+      console.log("Form Data being sent:", formData); // Log form data
 
       const response = await axios.post(
         `/api/users`,
@@ -45,6 +43,7 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
             navigate("/admin");
           } else {
             const { token, user } = response.data;
+            console.log("authToken", token);
             sessionStorage.setItem("authToken", token);
             sessionStorage.setItem("currentUser", JSON.stringify(user));
 
@@ -57,6 +56,7 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
         }, 3000);
       }
     } catch (error) {
+      console.error("Error in CreateAccount:", error.response);
       const errorMessage =
         error.response?.data?.errors?.join("\n") || "Failed to create user.";
       setError(errorMessage);
