@@ -19,14 +19,13 @@ const TaskForm = () => {
   const { id } = useParams(); // For edit case
   const navigate = useNavigate();
   const location = useLocation();
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     const fetchBoardsAndTask = async () => {
       try {
         const token = sessionStorage.getItem("authToken");
         // Fetch boards
-        const boardResponse = await axios.get(`${baseUrl}/api/boards`, {
+        const boardResponse = await axios.get(`/api/boards`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,7 +42,7 @@ const TaskForm = () => {
         }
 
         const taskId = id || -1; // Use -1 if creating a new task
-        const taskResponse = await axios.get(`${baseUrl}/api/tasks/${taskId}`, {
+        const taskResponse = await axios.get(`/api/tasks/${taskId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -68,7 +67,7 @@ const TaskForm = () => {
     };
 
     fetchBoardsAndTask();
-  }, [baseUrl, id, location.search]);
+  }, [id, location.search]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,7 +104,7 @@ const TaskForm = () => {
 
       if (id) {
         await axios.put(
-          `${baseUrl}/api/tasks/${id}`,
+          `/api/tasks/${id}`,
           {
             task: taskData,
           },
@@ -118,7 +117,7 @@ const TaskForm = () => {
         setFlashMessage("Task updated successfully!");
       } else {
         await axios.post(
-          `${baseUrl}/api/tasks`,
+          `/api/tasks`,
           {
             task: taskData,
           },

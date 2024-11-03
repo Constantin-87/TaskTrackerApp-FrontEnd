@@ -9,7 +9,6 @@ const AdminPage = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   // Reset the success message after 3 seconds
   useEffect(() => {
@@ -27,7 +26,7 @@ const AdminPage = () => {
     const fetchUsers = async () => {
       const token = sessionStorage.getItem("authToken");
       try {
-        const response = await axios.get(`${baseUrl}/api/users`, {
+        const response = await axios.get(`/api/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,7 +42,7 @@ const AdminPage = () => {
       }
     };
     fetchUsers();
-  }, [baseUrl]);
+  }, []);
 
   const handleCreateUser = () => {
     // Redirect to the CreateAccount page and indicate that it's being accessed from the Admin page
@@ -59,7 +58,7 @@ const AdminPage = () => {
     const token = sessionStorage.getItem("authToken");
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`${baseUrl}/api/users/${userId}`, {
+        await axios.delete(`/api/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
           },

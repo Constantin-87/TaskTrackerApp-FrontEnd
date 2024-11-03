@@ -6,13 +6,12 @@ import ErrorMessage from "../Shared/ErrorMessage";
 const TasksList = () => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const token = sessionStorage.getItem("authToken");
-        const response = await axios.get(`${baseUrl}/api/tasks`, {
+        const response = await axios.get(`/api/tasks`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -24,7 +23,7 @@ const TasksList = () => {
     };
 
     fetchTasks();
-  }, [baseUrl]);
+  }, []);
 
   return (
     <div>

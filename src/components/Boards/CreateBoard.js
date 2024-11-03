@@ -1,4 +1,3 @@
-// components/Boards/CreateBoard.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -13,14 +12,13 @@ const CreateBoard = () => {
   const [error, setError] = useState(null);
   const [flashMessage, setFlashMessage] = useState("");
   const navigate = useNavigate();
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     // Fetch teams for selection
     const fetchTeams = async () => {
       try {
         const token = sessionStorage.getItem("authToken"); // Retrieve the token for authentication
-        const response = await axios.get(`${baseUrl}/api/teams`, {
+        const response = await axios.get(`/api/teams`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the request headers
           },
@@ -39,30 +37,30 @@ const CreateBoard = () => {
     };
 
     fetchTeams();
-  }, [baseUrl]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // // Client-side validation
-    // if (!name || name.length < 2 || name.length > 25) {
-    //   setError("Board name must be between 2 and 25 characters.");
-    //   return;
-    // }
-    // if (!description || description.length < 20 || description.length > 300) {
-    //   setError("Description must be between 20 and 300 characters.");
-    //   return;
-    // }
-    // if (!teamId) {
-    //   setError("Please select a team.");
-    //   return;
-    // }
+    // Client-side validation
+    if (!name || name.length < 2 || name.length > 25) {
+      setError("Board name must be between 2 and 25 characters.");
+      return;
+    }
+    if (!description || description.length < 20 || description.length > 300) {
+      setError("Description must be between 20 and 300 characters.");
+      return;
+    }
+    if (!teamId) {
+      setError("Please select a team.");
+      return;
+    }
 
     try {
       const token = sessionStorage.getItem("authToken"); // Retrieve the JWT token from sessionStorage
 
       const response = await axios.post(
-        `${baseUrl}/api/boards`,
+        `/api/boards`,
         {
           board: {
             name,

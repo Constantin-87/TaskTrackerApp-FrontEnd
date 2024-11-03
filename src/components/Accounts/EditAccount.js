@@ -11,7 +11,6 @@ const EditAccount = ({ currentUser }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     // Check if the user has permission to edit the account
@@ -30,7 +29,7 @@ const EditAccount = ({ currentUser }) => {
           return;
         }
 
-        const response = await axios.get(`${baseUrl}/api/users/${id}`, {
+        const response = await axios.get(`/api/users/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
           },
@@ -44,13 +43,13 @@ const EditAccount = ({ currentUser }) => {
     };
 
     fetchUserData();
-  }, [id, currentUser, navigate, baseUrl]);
+  }, [id, currentUser, navigate]);
 
   const handleEdit = async (formData) => {
     const token = sessionStorage.getItem("authToken"); // Retrieve token
     try {
       const response = await axios.put(
-        `${baseUrl}/api/users/${id}`,
+        `/api/users/${id}`,
         {
           user: formData,
         },

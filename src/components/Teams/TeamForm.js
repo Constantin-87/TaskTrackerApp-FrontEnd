@@ -17,20 +17,19 @@ const TeamForm = () => {
   const [flashMessage, setFlashMessage] = useState("");
   const { id } = useParams(); // For edit case
   const navigate = useNavigate();
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("authToken");
 
-        const userResponse = await axios.get(`${baseUrl}/api/users`, {
+        const userResponse = await axios.get(`/api/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const boardResponse = await axios.get(`${baseUrl}/api/boards`, {
+        const boardResponse = await axios.get(`/api/boards`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,7 +42,7 @@ const TeamForm = () => {
         setBoards(Array.isArray(allBoards) ? allBoards : []);
 
         if (id) {
-          const teamResponse = await axios.get(`${baseUrl}/api/teams/${id}`, {
+          const teamResponse = await axios.get(`/api/teams/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -76,7 +75,7 @@ const TeamForm = () => {
       }
     };
     fetchData();
-  }, [baseUrl, id]);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +91,7 @@ const TeamForm = () => {
 
       if (id) {
         await axios.put(
-          `${baseUrl}/api/teams/${id}`,
+          `/api/teams/${id}`,
           {
             team: teamData,
           },
@@ -105,7 +104,7 @@ const TeamForm = () => {
         setFlashMessage("Team updated successfully!");
       } else {
         await axios.post(
-          `${baseUrl}/api/teams`,
+          `/api/teams`,
           {
             team: teamData,
           },

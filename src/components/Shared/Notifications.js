@@ -6,12 +6,10 @@ import { useNavigate } from "react-router-dom";
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
-  const wsUrl = baseUrl.replace(/^http/, "ws");
 
   useEffect(() => {
     // WebSocket connection for real-time notifications
-    const ws = new WebSocket(`${wsUrl}/api/api/notifications`);
+    const ws = new WebSocket(`/api/notifications`);
 
     ws.onopen = () => {
       console.log("Connected to WebSocket for notifications");
@@ -30,7 +28,7 @@ const Notifications = () => {
     return () => {
       ws.close();
     };
-  }, [wsUrl]);
+  }, []);
 
   // Function to extract task ID from notification message
   const extractTaskId = (message) => {
@@ -50,7 +48,7 @@ const Notifications = () => {
   const markAsRead = async (notificationId) => {
     try {
       const token = sessionStorage.getItem("authToken");
-      await axios.put(`${baseUrl}/api/notifications/${notificationId}`, null, {
+      await axios.put(`/api/notifications/${notificationId}`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

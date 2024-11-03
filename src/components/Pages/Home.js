@@ -10,12 +10,11 @@ const Home = () => {
   const navigate = useNavigate();
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const location = useLocation();
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   const fetchTasks = useCallback(async () => {
     try {
       const token = sessionStorage.getItem("authToken");
-      const response = await axios.get(`${baseUrl}/api/tasks`, {
+      const response = await axios.get(`/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -28,7 +27,7 @@ const Home = () => {
       console.error("Error fetching tasks:", error);
       setError("Failed to load tasks");
     }
-  }, [baseUrl]);
+  }, []);
 
   useEffect(() => {
     fetchTasks();
@@ -46,7 +45,7 @@ const Home = () => {
     try {
       const token = sessionStorage.getItem("authToken");
       await axios.put(
-        `${baseUrl}/api/tasks/${taskId}`,
+        `/api/tasks/${taskId}`,
         { task: { status: newStatus } },
         {
           headers: {

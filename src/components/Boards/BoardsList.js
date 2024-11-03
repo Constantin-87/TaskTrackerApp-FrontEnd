@@ -6,13 +6,12 @@ import axios from "axios";
 const BoardsList = () => {
   const [boards, setBoards] = useState([]);
   const [error, setError] = useState(null);
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   useEffect(() => {
     // Fetch boards from the backend
     const fetchBoards = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/api/boards`);
+        const response = await axios.get(`/api/boards`);
         setBoards(response.data.boards);
       } catch (err) {
         setError("Error fetching boards");
@@ -20,7 +19,7 @@ const BoardsList = () => {
     };
 
     fetchBoards();
-  }, [baseUrl]);
+  }, []);
 
   return (
     <div>
