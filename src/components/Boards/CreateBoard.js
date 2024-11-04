@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import FlashMessage from "../Shared/FlashMessage";
 import ErrorMessage from "../Shared/ErrorMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const CreateBoard = () => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const CreateBoard = () => {
     // Fetch teams for selection
     const fetchTeams = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token"); // Retrieve the token for authentication
+        const token = await getAccessToken();
         const response = await axios.get(`/api/teams`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the request headers
@@ -57,7 +58,7 @@ const CreateBoard = () => {
     }
 
     try {
-      const token = sessionStorage.getItem("refresh_token"); // Retrieve the JWT token from sessionStorage
+      const token = await getAccessToken();
 
       const response = await axios.post(
         `/api/boards`,

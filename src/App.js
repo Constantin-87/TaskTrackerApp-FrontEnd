@@ -26,6 +26,7 @@ import {
   loginUser,
   logoutUser,
   getCurrentUser,
+  getAccessToken,
 } from "./components/Accounts/Auth"; // Import authentication functions
 
 function App() {
@@ -46,9 +47,9 @@ function App() {
   }, []);
 
   // Function to fetch boards
-  const fetchBoards = async (token) => {
+  const fetchBoards = async () => {
     try {
-      const token = localStorage.getItem("refresh_token");
+      const token = await getAccessToken();
       console.log("Using token for fetchBoards:", token);
       if (!token) return; // Exit if no token
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import FlashMessage from "../Shared/FlashMessage";
 import ErrorMessage from "../Shared/ErrorMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
@@ -24,7 +25,7 @@ const AdminPage = () => {
   useEffect(() => {
     // Fetch all users
     const fetchUsers = async () => {
-      const token = sessionStorage.getItem("refresh_token");
+      const token = await getAccessToken();
       try {
         const response = await axios.get(`/api/users`, {
           headers: {
@@ -51,7 +52,7 @@ const AdminPage = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    const token = sessionStorage.getItem("refresh_token");
+    const token = await getAccessToken();
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await axios.delete(`/api/users/${userId}`, {

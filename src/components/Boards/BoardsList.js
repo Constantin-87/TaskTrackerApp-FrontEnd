@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const BoardsList = () => {
   const [boards, setBoards] = useState([]);
@@ -11,7 +12,12 @@ const BoardsList = () => {
     // Fetch boards from the backend
     const fetchBoards = async () => {
       try {
-        const response = await axios.get(`/api/boards`);
+        const token = getAccessToken(); // Retrieve the token
+        const response = await axios.get(`/api/boards`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setBoards(response.data.boards);
       } catch (err) {
         setError("Error fetching boards");

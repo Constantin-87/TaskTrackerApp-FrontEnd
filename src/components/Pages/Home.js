@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import AccordionItem from "../Shared/AccordionItem";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -13,12 +14,11 @@ const Home = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const token = sessionStorage.getItem("refresh_token");
+      const token = await getAccessToken();
       const response = await axios.get(`/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        withCredentials: true,
       });
 
       setTasks(response.data.tasks); // Set tasks from the response
@@ -43,7 +43,7 @@ const Home = () => {
   // Function to update task status
   const updateTaskStatus = async (taskId, newStatus) => {
     try {
-      const token = sessionStorage.getItem("refresh_token");
+      const token = await getAccessToken();
       await axios.put(
         `/api/tasks/${taskId}`,
         { task: { status: newStatus } },

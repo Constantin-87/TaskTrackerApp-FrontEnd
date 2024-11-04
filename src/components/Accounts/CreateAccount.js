@@ -4,13 +4,16 @@ import axios from "axios";
 import UserForm from "./UserForm";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
-import { getCurrentUser } from "./Auth";
+import { getCurrentUser, getAccessToken } from "./Auth";
 
 const CreateAccount = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const ACCESS_TOKEN_KEY = "access_token";
+  const REFRESH_TOKEN_KEY = "refresh_token";
+  const CURRENT_USER_KEY = "currentUser";
 
   // Determine whether the page was accessed from the AdminPage or LoginPage
   const fromAdminPage = location.state?.fromAdminPage || false;
@@ -20,7 +23,7 @@ const CreateAccount = () => {
     try {
       // Define headers and include token only if isAdmin is true and token is available
       const headers = isAdmin
-        ? { Authorization: `Bearer ${localStorage.getItem("refresh_token")}` }
+        ? { Authorization: `Bearer ${getAccessToken()}` }
         : {};
 
       console.log("Form Data being sent:", formData); // Log form data
@@ -40,10 +43,28 @@ const CreateAccount = () => {
             // Redirect back to the AdminPage if accessed from there
             navigate("/admin");
           } else {
-            const { token, user } = response.data;
-            console.log("refresh_token", token);
-            sessionStorage.setItem("refresh_token", token);
-            sessionStorage.setItem("currentUser", JSON.stringify(user));
+            // Extract token and create user object with the expected structure
+            if (
+              response.data &&
+              response.data.token &&
+              response.data.refresh_token &&
+              response.data.resource_owner
+            ) {
+              const { token, refresh_token } = response.data;
+              const user = {
+                ...response.data.resource_owner,
+                role: response.data.role,
+              };
+
+              console.log("Token:", token, "User:", user); // Log token and formatted user
+
+              // Store tokens and user information
+              localStorage.setItem(ACCESS_TOKEN_KEY, token);
+              localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token);
+              localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            } else {
+              throw new Error("Invalid JSON response from server");
+            }
             // Redirect to HomePage after successful signup and authentication
             navigate("/home");
           }

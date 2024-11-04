@@ -4,6 +4,7 @@ import axios from "axios";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import FlashMessage from "../Shared/FlashMessage";
 import ErrorMessage from "../Shared/ErrorMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const BoardShow = () => {
   const { id } = useParams();
@@ -20,7 +21,7 @@ const BoardShow = () => {
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
         const boardResponse = await axios.get(`/api/boards/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -38,7 +39,7 @@ const BoardShow = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
         const tasksResponse = await axios.get(`/api/tasks?board_id=${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -53,7 +54,7 @@ const BoardShow = () => {
   }, [id]);
 
   const handleDeleteTask = async (taskId) => {
-    const token = sessionStorage.getItem("refresh_token");
+    const token = await getAccessToken();
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         await axios.delete(`/api/tasks/${taskId}`, {
@@ -68,7 +69,7 @@ const BoardShow = () => {
   };
 
   const handleDeleteBoard = async () => {
-    const token = sessionStorage.getItem("refresh_token");
+    const token = await getAccessToken();
     try {
       await axios.delete(`/api/boards/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -101,7 +102,7 @@ const BoardShow = () => {
 
   const handleTaskUpdate = async (taskId, updatedFields) => {
     try {
-      const token = sessionStorage.getItem("refresh_token");
+      const token = await getAccessToken();
       await axios.put(
         `/api/tasks/${taskId}`,
         { task: updatedFields },
