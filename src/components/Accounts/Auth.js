@@ -30,6 +30,8 @@ export const loginUser = async (email, password) => {
       const user = {
         ...response.data.resource_owner,
         role: response.data.role,
+        firstName: response.data.resource_owner.first_name,
+        lastName: response.data.resource_owner.last_name,
       };
 
       console.log("Token:", token, "User:", user); // Log token and formatted user
