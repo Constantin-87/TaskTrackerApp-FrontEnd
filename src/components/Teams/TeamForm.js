@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const TeamForm = () => {
   const [name, setName] = useState("");
@@ -21,7 +22,7 @@ const TeamForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
 
         const userResponse = await axios.get(`/api/users`, {
           headers: {
@@ -80,7 +81,7 @@ const TeamForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = sessionStorage.getItem("refresh_token"); // Retrieve the JWT token from sessionStorage
+      const token = await getAccessToken();
 
       const teamData = {
         name,

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom"; // Import useParams to get the user ID
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
+import { getAccessToken } from "./Auth";
 
 const EditAccount = ({ currentUser }) => {
   const [user, setUser] = useState({});
@@ -22,7 +23,7 @@ const EditAccount = ({ currentUser }) => {
     // Fetch user data using the ID from the URL
     const fetchUserData = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token"); // Retrieve token
+        const token = await getAccessToken(); // Retrieve token
 
         if (!token) {
           setError("Authorization token missing.");
@@ -46,7 +47,7 @@ const EditAccount = ({ currentUser }) => {
   }, [id, currentUser, navigate]);
 
   const handleEdit = async (formData) => {
-    const token = sessionStorage.getItem("refresh_token"); // Retrieve token
+    const token = await getAccessToken(); // Retrieve token
     try {
       const response = await axios.put(
         `/api/users/${id}`,

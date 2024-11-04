@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const TaskForm = () => {
   const [title, setTitle] = useState("");
@@ -23,7 +24,7 @@ const TaskForm = () => {
   useEffect(() => {
     const fetchBoardsAndTask = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
         // Fetch boards
         const boardResponse = await axios.get(`/api/boards`, {
           headers: {
@@ -91,7 +92,7 @@ const TaskForm = () => {
     }
 
     try {
-      const token = sessionStorage.getItem("refresh_token");
+      const token = await getAccessToken();
 
       const taskData = {
         title,

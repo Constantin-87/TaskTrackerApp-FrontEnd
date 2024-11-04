@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const TeamsList = () => {
   const [teams, setTeams] = useState([]);
@@ -14,7 +15,7 @@ const TeamsList = () => {
     const fetchTeams = async () => {
       try {
         // Get the JWT token from sessionStorage
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
 
         const response = await axios.get(`/api/teams`, {
           headers: {
@@ -33,7 +34,7 @@ const TeamsList = () => {
     if (window.confirm("Are you sure you want to delete this team?")) {
       try {
         // Get the JWT token from sessionStorage
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
 
         await axios.delete(`/api/teams/${teamId}`, {
           headers: {

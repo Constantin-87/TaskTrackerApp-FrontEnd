@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -47,7 +48,7 @@ const Notifications = () => {
   // Mark notification as read
   const markAsRead = async (notificationId) => {
     try {
-      const token = sessionStorage.getItem("refresh_token");
+      const token = await getAccessToken();
       await axios.put(`/api/notifications/${notificationId}`, null, {
         headers: {
           Authorization: `Bearer ${token}`,

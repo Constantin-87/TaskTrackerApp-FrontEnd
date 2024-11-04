@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ErrorMessage from "../Shared/ErrorMessage";
+import { getAccessToken } from "./Auth";
 
 const UserForm = ({
   user = {},
@@ -17,7 +18,6 @@ const UserForm = ({
   const [newPassword, setNewPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState("");
-  const baseUrl = `${process.env.REACT_APP_BASE_URL}:${process.env.REACT_APP_API_PORT}`;
 
   // Only pre-fill form fields if in edit mode and `user` data is available
   useEffect(() => {
@@ -33,9 +33,9 @@ const UserForm = ({
   useEffect(() => {
     if (isAdmin && roles.length === 0) {
       const fetchRoles = async () => {
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
         try {
-          const response = await axios.get(`${baseUrl}/api/users`, {
+          const response = await axios.get(`/api/users`, {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
           });
@@ -46,7 +46,7 @@ const UserForm = ({
       };
       fetchRoles();
     }
-  }, [baseUrl, isAdmin, roles.length]);
+  }, [isAdmin, roles.length]);
 
   const validateInputs = () => {
     // Reset any previous errors

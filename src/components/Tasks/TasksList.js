@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ErrorMessage from "../Shared/ErrorMessage";
+import { getAccessToken } from "../../components/Accounts/Auth";
 
 const TasksList = () => {
   const [tasks, setTasks] = useState([]);
@@ -10,7 +11,7 @@ const TasksList = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = sessionStorage.getItem("refresh_token");
+        const token = await getAccessToken();
         const response = await axios.get(`/api/tasks`, {
           headers: {
             Authorization: `Bearer ${token}`,
