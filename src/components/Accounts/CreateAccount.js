@@ -4,8 +4,9 @@ import axios from "axios";
 import UserForm from "./UserForm";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
+import { getCurrentUser } from "./Auth";
 
-const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
+const CreateAccount = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -13,24 +14,21 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
 
   // Determine whether the page was accessed from the AdminPage or LoginPage
   const fromAdminPage = location.state?.fromAdminPage || false;
+  const isAdmin = getCurrentUser()?.role === "admin";
 
   const handleCreateUser = async (formData) => {
     try {
       // Define headers and include token only if isAdmin is true and token is available
-      const headers =
-        isAdmin && sessionStorage.getItem("authToken")
-          ? { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` }
-          : {};
+      const headers = isAdmin
+        ? { Authorization: `Bearer ${localStorage.getItem("refresh_token")}` }
+        : {};
 
       console.log("Form Data being sent:", formData); // Log form data
 
       const response = await axios.post(
-        `/api/users`,
+        `http://127.0.0.1:4000/users/tokens/sign_up`,
         { user: formData },
-        {
-          headers: headers,
-          withCredentials: true,
-        }
+        { headers }
       );
 
       if (response.status === 201) {
@@ -43,13 +41,9 @@ const CreateAccount = ({ isAdmin, setIsAuthenticated, setCurrentUser }) => {
             navigate("/admin");
           } else {
             const { token, user } = response.data;
-            console.log("authToken", token);
-            sessionStorage.setItem("authToken", token);
+            console.log("refresh_token", token);
+            sessionStorage.setItem("refresh_token", token);
             sessionStorage.setItem("currentUser", JSON.stringify(user));
-
-            setIsAuthenticated(true);
-            setCurrentUser(user);
-
             // Redirect to HomePage after successful signup and authentication
             navigate("/home");
           }

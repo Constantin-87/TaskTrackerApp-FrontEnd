@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Login from "./Login";
 import { BrowserRouter } from "react-router-dom";
 
@@ -19,7 +19,6 @@ describe("Login Component", () => {
 
   test("renders email and password input fields", () => {
     setup();
-    // Use getByRole to specifically target the email and password input fields
     expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
   });
@@ -32,18 +31,16 @@ describe("Login Component", () => {
     ).toBeInTheDocument();
   });
 
-  test("calls loginUser function on form submission", async () => {
+  test("calls loginUser function on form submission", () => {
     setup();
     const emailInput = screen.getByPlaceholderText("Email");
     const passwordInput = screen.getByPlaceholderText("Password");
     const loginButton = screen.getByRole("button", { name: /login/i });
 
-    // Use await act to wrap asynchronous interactions
-    await act(async () => {
-      fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-      fireEvent.change(passwordInput, { target: { value: "password123" } });
-      fireEvent.click(loginButton);
-    });
+    // Perform fireEvent actions without wrapping them in act
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(loginButton);
 
     // Check if mockLoginUser function was called with correct arguments
     expect(mockLoginUser).toHaveBeenCalledWith(

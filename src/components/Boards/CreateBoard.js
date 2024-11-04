@@ -17,7 +17,7 @@ const CreateBoard = () => {
     // Fetch teams for selection
     const fetchTeams = async () => {
       try {
-        const token = sessionStorage.getItem("authToken"); // Retrieve the token for authentication
+        const token = sessionStorage.getItem("refresh_token"); // Retrieve the token for authentication
         const response = await axios.get(`/api/teams`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the request headers
@@ -57,7 +57,7 @@ const CreateBoard = () => {
     }
 
     try {
-      const token = sessionStorage.getItem("authToken"); // Retrieve the JWT token from sessionStorage
+      const token = sessionStorage.getItem("refresh_token"); // Retrieve the JWT token from sessionStorage
 
       const response = await axios.post(
         `/api/boards`,

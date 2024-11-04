@@ -22,7 +22,7 @@ const EditAccount = ({ currentUser }) => {
     // Fetch user data using the ID from the URL
     const fetchUserData = async () => {
       try {
-        const token = sessionStorage.getItem("authToken"); // Retrieve token
+        const token = sessionStorage.getItem("refresh_token"); // Retrieve token
 
         if (!token) {
           setError("Authorization token missing.");
@@ -46,7 +46,7 @@ const EditAccount = ({ currentUser }) => {
   }, [id, currentUser, navigate]);
 
   const handleEdit = async (formData) => {
-    const token = sessionStorage.getItem("authToken"); // Retrieve token
+    const token = sessionStorage.getItem("refresh_token"); // Retrieve token
     try {
       const response = await axios.put(
         `/api/users/${id}`,

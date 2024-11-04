@@ -4,7 +4,7 @@ import App from "./App";
 test("renders login page by default", () => {
   render(<App />);
 
-  // Use getByRole to specify the heading element to avoid ambiguity with the button
+  // Check for the heading and form fields in the login page
   const loginHeading = screen.getByRole("heading", { name: /login/i });
   expect(loginHeading).toBeInTheDocument();
 

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = ({ currentUser, boards, logoutUser }) => {
-  const navigate = useNavigate(); // Moved here
+  const navigate = useNavigate();
+
   const handleLogout = async () => {
     await logoutUser(); // Execute the logout API call
     navigate("/login"); // Navigate to login after logout

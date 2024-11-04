@@ -47,7 +47,7 @@ const Notifications = () => {
   // Mark notification as read
   const markAsRead = async (notificationId) => {
     try {
-      const token = sessionStorage.getItem("authToken");
+      const token = sessionStorage.getItem("refresh_token");
       await axios.put(`/api/notifications/${notificationId}`, null, {
         headers: {
           Authorization: `Bearer ${token}`,

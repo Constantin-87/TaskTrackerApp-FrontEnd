@@ -23,7 +23,7 @@ const TaskForm = () => {
   useEffect(() => {
     const fetchBoardsAndTask = async () => {
       try {
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
         // Fetch boards
         const boardResponse = await axios.get(`/api/boards`, {
           headers: {
@@ -91,7 +91,7 @@ const TaskForm = () => {
     }
 
     try {
-      const token = sessionStorage.getItem("authToken");
+      const token = sessionStorage.getItem("refresh_token");
 
       const taskData = {
         title,

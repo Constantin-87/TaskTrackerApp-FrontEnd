@@ -21,7 +21,7 @@ const TeamForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
 
         const userResponse = await axios.get(`/api/users`, {
           headers: {
@@ -80,7 +80,7 @@ const TeamForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = sessionStorage.getItem("authToken"); // Retrieve the JWT token from sessionStorage
+      const token = sessionStorage.getItem("refresh_token"); // Retrieve the JWT token from sessionStorage
 
       const teamData = {
         name,

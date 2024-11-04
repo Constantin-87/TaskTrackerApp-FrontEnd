@@ -13,7 +13,7 @@ const Home = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const token = sessionStorage.getItem("authToken");
+      const token = sessionStorage.getItem("refresh_token");
       const response = await axios.get(`/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ const Home = () => {
   // Function to update task status
   const updateTaskStatus = async (taskId, newStatus) => {
     try {
-      const token = sessionStorage.getItem("authToken");
+      const token = sessionStorage.getItem("refresh_token");
       await axios.put(
         `/api/tasks/${taskId}`,
         { task: { status: newStatus } },

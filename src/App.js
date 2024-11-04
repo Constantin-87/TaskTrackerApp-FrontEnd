@@ -22,109 +22,69 @@ import TaskForm from "./components/Tasks/TaskForm";
 import ErrorMessage from "./components/Shared/ErrorMessage";
 import AdminPage from "./components/Pages/AdminPage";
 import Notifications from "./components/Shared/Notifications";
+import {
+  loginUser,
+  logoutUser,
+  getCurrentUser,
+} from "./components/Accounts/Auth"; // Import authentication functions
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null); // Store current user info
+  const [currentUser, setCurrentUser] = useState(null);
   const [boards, setBoards] = useState([]); // Store board data
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state to prevent premature redirects
   const showError = error ? <ErrorMessage message={error} /> : null;
 
+  useEffect(() => {
+    const user = getCurrentUser();
+    console.log("User retrieved on initial load:", user);
+    if (user) {
+      setCurrentUser(user);
+      fetchBoards();
+    }
+    setLoading(false);
+  }, []);
+
   // Function to fetch boards
   const fetchBoards = async (token) => {
     try {
-      const response = await axios.get(`/api/boards`, {
+      const token = localStorage.getItem("refresh_token");
+      console.log("Using token for fetchBoards:", token);
+      if (!token) return; // Exit if no token
+
+      const response = await axios.get("/api/boards", {
         headers: {
-          Authorization: `Bearer ${token}`, // Use token from sessionStorage
+          Authorization: `Bearer ${token}`,
         },
-        withCredentials: true, // Ensure credentials are sent with the request
       });
       setBoards(response.data.boards);
     } catch (error) {
       console.error("Error fetching boards:", error);
-      if (error.response && error.response.status === 401) {
-        setError("Unauthorized access. Please log in again.");
-        setIsAuthenticated(false);
-      } else {
-        setError("Failed to load boards");
-      }
+      setError("Failed to load boards");
     }
   };
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("authToken");
-    const storedUser = sessionStorage.getItem("currentUser");
-
-    if (token && storedUser) {
-      setIsAuthenticated(true);
-      setCurrentUser(JSON.parse(storedUser)); // Parse and set the user from sessionStorage
-      fetchBoards(token);
-    }
-    setLoading(false); // Always set loading to false after checking
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loginUser = async (email, password) => {
+  const handleLogin = async (email, password) => {
+    setError(null);
     try {
-      const response = await axios.post(
-        `/api/users/sign_in`,
-        {
-          user: { email, password },
-        },
-        {
-          withCredentials: true, // Ensures cookies are sent with the request
-        }
-      );
-      if (response.status === 200) {
-        // Extract JWT token from the response headers
-        const token = response.headers.authorization.split(" ")[1]; // 'Bearer <token>'
-
-        // Store token and user details in sessionStorage
-        sessionStorage.setItem("authToken", token); // Store token in sessionStorage
-        sessionStorage.setItem(
-          "currentUser",
-          JSON.stringify({
-            id: response.data.user.id,
-            firstName: response.data.user.first_name, // Retrieve from response
-            email: response.data.user.email,
-            role: response.data.user.role,
-          })
-        );
-
-        // Set the authenticated state and current user
-        setIsAuthenticated(true);
-        setCurrentUser({
-          firstName: response.data.user.first_name, // Use real data from response
-          email: response.data.user.email,
-          role: response.data.user.role,
-        });
-
-        // Fetch boards after login
-        fetchBoards(token); // Fetch the boards right after login
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setError("Failed to log in. Please check your credentials.");
+      await loginUser(email, password);
+      const user = getCurrentUser();
+      console.log("User after login:", user);
+      setCurrentUser(getCurrentUser());
+      fetchBoards();
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   // Define the logout function
-  const logoutUser = async () => {
+  const handleLogout = async () => {
     try {
-      const response = await axios.delete(`/api/users/sign_out`, {
-        withCredentials: true, // Ensure cookies are sent with the request
-      });
-      if (response.status === 200) {
-        setIsAuthenticated(false);
-        sessionStorage.removeItem("authToken"); // Clear token from sessionStorage
-        sessionStorage.removeItem("currentUser"); // Clear user details from sessionStorage
-        setCurrentUser(null); // Clear current user state
-        setBoards([]);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-      setError("Failed to log out. Please try again.");
+      await logoutUser();
+      setBoards([]);
+      setCurrentUser(null);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -138,95 +98,79 @@ function App() {
       <div className="container-fluid min-vh-100 bg-dark">
         <div className="row">
           {/* Render Sidebar for authenticated users */}
-          {isAuthenticated && (
+          {currentUser && (
             <div className="col-md-2">
               <Sidebar
                 currentUser={currentUser}
                 boards={boards}
-                logoutUser={logoutUser} // Pass logoutUser to Sidebar
+                logoutUser={handleLogout} // Pass logoutUser to Sidebar
               />
             </div>
           )}
 
-          <main className={isAuthenticated ? "col-md-10 ms-auto" : "w-100"}>
+          <main className={currentUser ? "col-md-10 ms-auto" : "w-100"}>
             {showError}
             {/* Render the Notifications component */}
-            {isAuthenticated && <Notifications />}
+            {currentUser && <Notifications />}
+
             <Routes>
               {/* Login route - accessible to unauthenticated users */}
               <Route
                 path="/login"
                 element={
-                  !isAuthenticated ? (
-                    <Login loginUser={loginUser} />
+                  !currentUser ? (
+                    <Login loginUser={handleLogin} />
                   ) : (
                     <Navigate to="/home" />
                   )
                 }
               />
 
-              <Route
-                path="/signup"
-                element={
-                  <CreateAccount
-                    isAdmin={currentUser?.role === "admin"}
-                    setIsAuthenticated={setIsAuthenticated}
-                    setCurrentUser={setCurrentUser}
-                  />
-                }
-              />
+              <Route path="/signup" element={<CreateAccount />} />
 
               {/* Home route - accessible only to authenticated users */}
               <Route
                 path="/home"
-                element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+                element={currentUser ? <Home /> : <Navigate to="/login" />}
               />
 
               {/* Boards routes */}
               <Route
                 path="/boards"
                 element={
-                  isAuthenticated ? <BoardsList /> : <Navigate to="/login" />
+                  currentUser ? <BoardsList /> : <Navigate to="/login" />
                 }
               />
               <Route
                 path="/boards/new"
                 element={
-                  isAuthenticated ? <CreateBoard /> : <Navigate to="/login" />
+                  currentUser ? <CreateBoard /> : <Navigate to="/login" />
                 }
               />
               <Route
                 path="/boards/:id"
-                element={
-                  isAuthenticated ? <BoardShow /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <BoardShow /> : <Navigate to="/login" />}
               />
 
               {/* Teams routes */}
               <Route
                 path="/teams"
-                element={
-                  isAuthenticated ? <TeamsList /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <TeamsList /> : <Navigate to="/login" />}
               />
               <Route
                 path="/teams/new"
-                element={
-                  isAuthenticated ? <TeamForm /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <TeamForm /> : <Navigate to="/login" />}
               />
               <Route
                 path="/teams/:id/edit"
-                element={
-                  isAuthenticated ? <TeamForm /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <TeamForm /> : <Navigate to="/login" />}
               />
 
               {/* Default route */}
               <Route
                 path="*"
                 element={
-                  isAuthenticated ? (
+                  currentUser ? (
                     <Navigate to="/home" />
                   ) : (
                     <Navigate to="/login" />
@@ -237,28 +181,22 @@ function App() {
               {/* Add task routes */}
               <Route
                 path="/tasks"
-                element={
-                  isAuthenticated ? <TasksList /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <TasksList /> : <Navigate to="/login" />}
               />
               <Route
                 path="/tasks/new"
-                element={
-                  isAuthenticated ? <TaskForm /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <TaskForm /> : <Navigate to="/login" />}
               />
               <Route
                 path="/tasks/:id/edit"
-                element={
-                  isAuthenticated ? <TaskForm /> : <Navigate to="/login" />
-                }
+                element={currentUser ? <TaskForm /> : <Navigate to="/login" />}
               />
 
               {/* AdminPage route - accessible only to admins */}
               <Route
                 path="/admin"
                 element={
-                  isAuthenticated && currentUser.role === "admin" ? (
+                  currentUser?.role === "admin" ? (
                     <AdminPage />
                   ) : (
                     <Navigate to="/login" />
@@ -270,7 +208,7 @@ function App() {
               <Route
                 path="/users/:id/edit"
                 element={
-                  isAuthenticated ? (
+                  currentUser ? (
                     <EditAccount currentUser={currentUser} />
                   ) : (
                     <Navigate to="/login" />

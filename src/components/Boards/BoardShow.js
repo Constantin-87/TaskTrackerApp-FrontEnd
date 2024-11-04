@@ -20,7 +20,7 @@ const BoardShow = () => {
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
         const boardResponse = await axios.get(`/api/boards/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -38,7 +38,7 @@ const BoardShow = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
         const tasksResponse = await axios.get(`/api/tasks?board_id=${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -53,7 +53,7 @@ const BoardShow = () => {
   }, [id]);
 
   const handleDeleteTask = async (taskId) => {
-    const token = sessionStorage.getItem("authToken");
+    const token = sessionStorage.getItem("refresh_token");
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         await axios.delete(`/api/tasks/${taskId}`, {
@@ -68,7 +68,7 @@ const BoardShow = () => {
   };
 
   const handleDeleteBoard = async () => {
-    const token = sessionStorage.getItem("authToken");
+    const token = sessionStorage.getItem("refresh_token");
     try {
       await axios.delete(`/api/boards/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -101,7 +101,7 @@ const BoardShow = () => {
 
   const handleTaskUpdate = async (taskId, updatedFields) => {
     try {
-      const token = sessionStorage.getItem("authToken");
+      const token = sessionStorage.getItem("refresh_token");
       await axios.put(
         `/api/tasks/${taskId}`,
         { task: updatedFields },

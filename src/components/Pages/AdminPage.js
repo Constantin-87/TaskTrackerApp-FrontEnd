@@ -24,21 +24,17 @@ const AdminPage = () => {
   useEffect(() => {
     // Fetch all users
     const fetchUsers = async () => {
-      const token = sessionStorage.getItem("authToken");
+      const token = sessionStorage.getItem("refresh_token");
       try {
         const response = await axios.get(`/api/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          withCredentials: true,
         });
         setUsers(response.data.users);
       } catch (error) {
         console.error("Error fetching users:", error);
-        setError("Error fetching users.");
-        if (error.response && error.response.status === 401) {
-          setError("Unauthorized access. Please log in again.");
-        }
+        setError("Failed to fetch users.");
       }
     };
     fetchUsers();
@@ -46,7 +42,7 @@ const AdminPage = () => {
 
   const handleCreateUser = () => {
     // Redirect to the CreateAccount page and indicate that it's being accessed from the Admin page
-    navigate("/signup", { state: { fromAdminPage: true } });
+    navigate("/signup");
   };
 
   const handleEditButtonClick = (user) => {
@@ -55,14 +51,13 @@ const AdminPage = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    const token = sessionStorage.getItem("authToken");
+    const token = sessionStorage.getItem("refresh_token");
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await axios.delete(`/api/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
           },
-          withCredentials: true, // Ensure credentials are sent with the request
         });
         setUsers(users.filter((user) => user.id !== userId));
         setShowSuccessMessage(true);

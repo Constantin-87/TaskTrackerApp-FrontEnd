@@ -9,10 +9,9 @@ const Login = ({ loginUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempt for user:", email);
     try {
       await loginUser(email, password);
-      console.log("Login successful for user:", email);
+      navigate("/home");
     } catch (err) {
       setError("Invalid login credentials");
     }
@@ -20,7 +19,7 @@ const Login = ({ loginUser }) => {
 
   const handleSignUp = () => {
     // Redirect to CreateAccount page (state set to indicate it's from the login page)
-    navigate("/signup", { state: { fromAdminPage: false } });
+    navigate("/signup");
   };
 
   return (

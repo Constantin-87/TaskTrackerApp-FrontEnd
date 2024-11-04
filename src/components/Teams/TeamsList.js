@@ -14,7 +14,7 @@ const TeamsList = () => {
     const fetchTeams = async () => {
       try {
         // Get the JWT token from sessionStorage
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
 
         const response = await axios.get(`/api/teams`, {
           headers: {
@@ -33,7 +33,7 @@ const TeamsList = () => {
     if (window.confirm("Are you sure you want to delete this team?")) {
       try {
         // Get the JWT token from sessionStorage
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
 
         await axios.delete(`/api/teams/${teamId}`, {
           headers: {

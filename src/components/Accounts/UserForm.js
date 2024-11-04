@@ -33,7 +33,7 @@ const UserForm = ({
   useEffect(() => {
     if (isAdmin && roles.length === 0) {
       const fetchRoles = async () => {
-        const token = sessionStorage.getItem("authToken");
+        const token = sessionStorage.getItem("refresh_token");
         try {
           const response = await axios.get(`${baseUrl}/api/users`, {
             headers: { Authorization: `Bearer ${token}` },
