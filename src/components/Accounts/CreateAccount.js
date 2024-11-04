@@ -26,7 +26,7 @@ const CreateAccount = () => {
       console.log("Form Data being sent:", formData); // Log form data
 
       const response = await axios.post(
-        `http://127.0.0.1:4000/users/tokens/sign_up`,
+        `/api/users/tokens/sign_up`,
         { user: formData },
         { headers }
       );
