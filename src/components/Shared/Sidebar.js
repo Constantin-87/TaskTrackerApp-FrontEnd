@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getAccessToken } from "../Accounts/Auth";
 
 const Sidebar = ({ currentUser, boards, logoutUser }) => {
   const navigate = useNavigate();
+  const [token, setToken] = useState(null);
 
   const handleLogout = async () => {
     await logoutUser(); // Execute the logout API call
@@ -22,6 +24,15 @@ const Sidebar = ({ currentUser, boards, logoutUser }) => {
   const toggleAdminAccordion = () => {
     setIsAdminOpen(!isAdminOpen);
   };
+
+  // Fetch the token when the component mounts
+  useEffect(() => {
+    const fetchToken = async () => {
+      const accessToken = await getAccessToken();
+      setToken(accessToken);
+    };
+    fetchToken();
+  }, []);
 
   return (
     <nav id="sidebarMenu" className="d-md-block bg-dark sidebar collapse">
@@ -158,7 +169,7 @@ const Sidebar = ({ currentUser, boards, logoutUser }) => {
           {currentUser?.id && (
             <li className="nav-item mb-2">
               <Link
-                to={`/users/${currentUser.id}/edit`} // Link to the current user's edit page
+                to={`/users/${currentUser.id}/edit?token=${token}`}
                 className="nav-link text-light d-flex align-items-center"
               >
                 <i className="bi bi-pencil-square me-2"></i> Edit My Account
