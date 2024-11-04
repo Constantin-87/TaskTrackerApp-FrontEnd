@@ -43,7 +43,7 @@ const AdminPage = () => {
 
   const handleCreateUser = () => {
     // Redirect to the CreateAccount page and indicate that it's being accessed from the Admin page
-    navigate("/signup");
+    navigate("/signup", { state: { fromAdminPage: true } });
   };
 
   const handleEditButtonClick = (user) => {

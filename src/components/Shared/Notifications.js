@@ -9,26 +9,41 @@ const Notifications = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // WebSocket connection for real-time notifications
-    const ws = new WebSocket(`/api/notifications`);
+    // Define an async function to initialize WebSocket
+    const initializeWebSocket = async () => {
+      const token = await getAccessToken();
 
-    ws.onopen = () => {
-      console.log("Connected to WebSocket for notifications");
+      // Ensure token is available before initializing WebSocket
+      if (!token) {
+        console.error(
+          "Token not available. Unable to establish WebSocket connection."
+        );
+        return;
+      }
+
+      // Establish WebSocket connection with the token included in the URL
+      const ws = new WebSocket(`/api/notifications?token=${token}`);
+
+      ws.onopen = () => {
+        console.log("Connected to WebSocket for notifications");
+      };
+
+      ws.onmessage = (event) => {
+        const newNotification = JSON.parse(event.data);
+        setNotifications((prev) => [newNotification, ...prev]);
+      };
+
+      ws.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
+
+      // Close WebSocket connection when component unmounts
+      return () => {
+        ws.close();
+      };
     };
 
-    ws.onmessage = (event) => {
-      const newNotification = JSON.parse(event.data);
-      setNotifications((prev) => [newNotification, ...prev]);
-    };
-
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-
-    // Close WebSocket connection when component unmounts
-    return () => {
-      ws.close();
-    };
+    initializeWebSocket();
   }, []);
 
   // Function to extract task ID from notification message
@@ -53,7 +68,6 @@ const Notifications = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        withCredentials: true,
       });
 
       // Remove the notification from the list after marking as read

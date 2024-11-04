@@ -17,7 +17,9 @@ const CreateAccount = () => {
 
   // Determine whether the page was accessed from the AdminPage or LoginPage
   const fromAdminPage = location.state?.fromAdminPage || false;
+  console.log("From Admin Page:", fromAdminPage);
   const isAdmin = getCurrentUser()?.role === "admin";
+  console.log("Is Admin:", isAdmin);
 
   const handleCreateUser = async (formData) => {
     try {
@@ -40,9 +42,11 @@ const CreateAccount = () => {
         // After 3 seconds, navigate based on where the user came from
         setTimeout(() => {
           if (fromAdminPage) {
+            console.log("Redirecting to AdminPage");
             // Redirect back to the AdminPage if accessed from there
             navigate("/admin");
           } else {
+            console.log("Redirecting to HomePage after login");
             // Extract token and create user object with the expected structure
             if (
               response.data &&
