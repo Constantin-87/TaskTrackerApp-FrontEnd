@@ -23,7 +23,7 @@ const CreateAccount = () => {
     try {
       // Define headers and include token only if isAdmin is true and token is available
       const headers = isAdmin
-        ? { Authorization: `Bearer ${getAccessToken()}` }
+        ? { Authorization: `Bearer ${await getAccessToken()}` }
         : {};
 
       console.log("Form Data being sent:", formData); // Log form data
@@ -50,7 +50,9 @@ const CreateAccount = () => {
               response.data.refresh_token &&
               response.data.resource_owner
             ) {
-              const { token, refresh_token } = response.data;
+              const { token, refresh_token, expires_in } = response.data;
+              const expirationTime = Date.now() + expires_in * 1000; // Calculate expiration time in ms
+
               const user = {
                 ...response.data.resource_owner,
                 role: response.data.role,
@@ -62,6 +64,7 @@ const CreateAccount = () => {
               localStorage.setItem(ACCESS_TOKEN_KEY, token);
               localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token);
               localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+              localStorage.setItem("expiration_time", expirationTime);
             } else {
               throw new Error("Invalid JSON response from server");
             }

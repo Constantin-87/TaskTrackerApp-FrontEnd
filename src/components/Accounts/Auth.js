@@ -35,10 +35,10 @@ export const loginUser = async (email, password) => {
       console.log("Token:", token, "User:", user); // Log token and formatted user
 
       // Store tokens, expiration, and user information
-      localStorage.setItem("access_token", token);
-      localStorage.setItem("refresh_token", refresh_token);
-      localStorage.setItem("expiration_time", expirationTime); // Store expiration time
-      localStorage.setItem("currentUser", JSON.stringify(user));
+      localStorage.setItem(ACCESS_TOKEN_KEY, token);
+      localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token);
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+      localStorage.setItem("expiration_time", expirationTime);
     } else {
       throw new Error("Invalid JSON response from server");
     }
