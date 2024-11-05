@@ -11,13 +11,13 @@ import Login from "./components/Accounts/Login";
 import CreateAccount from "./components/Accounts/CreateAccount";
 import EditAccount from "./components/Accounts/EditAccount";
 import Home from "./components/Pages/Home";
-import Sidebar from "./components/Shared/Sidebar"; // Import Sidebar component
+import Sidebar from "./components/Shared/Sidebar";
 import BoardsList from "./components/Boards/BoardsList";
 import BoardShow from "./components/Boards/BoardShow";
 import TeamsList from "./components/Teams/TeamsList";
 import TeamForm from "./components/Teams/TeamForm";
 import CreateBoard from "./components/Boards/CreateBoard";
-import TasksList from "./components/Tasks/TasksList"; // Import tasks components
+import TasksList from "./components/Tasks/TasksList";
 import TaskForm from "./components/Tasks/TaskForm";
 import ErrorMessage from "./components/Shared/ErrorMessage";
 import AdminPage from "./components/Pages/AdminPage";
@@ -27,11 +27,11 @@ import {
   logoutUser,
   getCurrentUser,
   getAccessToken,
-} from "./components/Accounts/Auth"; // Import authentication functions
+} from "./components/Accounts/Auth";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  const [boards, setBoards] = useState([]); // Store board data
+  const [boards, setBoards] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state to prevent premature redirects
   const showError = error ? <ErrorMessage message={error} /> : null;
@@ -51,7 +51,7 @@ function App() {
     try {
       const token = await getAccessToken();
       console.log("Using token for fetchBoards:", token);
-      if (!token) return; // Exit if no token
+      if (!token) return;
 
       const response = await axios.get("/api/boards", {
         headers: {
@@ -76,7 +76,7 @@ function App() {
     }
   };
 
-  // Define the logout function
+  // Logout function
   const handleLogout = async () => {
     try {
       await logoutUser();
@@ -91,7 +91,6 @@ function App() {
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log("App currentUser  before sidebar:", currentUser);
 
   return (
     <Router>
