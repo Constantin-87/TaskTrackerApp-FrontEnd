@@ -4,7 +4,7 @@ import axios from "axios";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import FlashMessage from "../Shared/FlashMessage";
 import ErrorMessage from "../Shared/ErrorMessage";
-import { getAccessToken } from "../../components/Accounts/Auth";
+import { getAccessToken, getCurrentUser } from "../../components/Accounts/Auth";
 
 const BoardShow = () => {
   const { id } = useParams();
@@ -17,6 +17,7 @@ const BoardShow = () => {
   const [error, setError] = useState(null);
   const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
   const navigate = useNavigate();
+  const currentUser = getCurrentUser();
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -133,26 +134,17 @@ const BoardShow = () => {
       {error && <ErrorMessage message={error} />}
 
       {/* Collapsible Board Description */}
-      <div className="board-description  text-light mb-3">
+      <div className="board-description text-light mb-3">
         <h5>Board Description:</h5>
-        <div
-          id="boardDescriptionCollapsed"
-          className={isDescriptionCollapsed ? "" : "d-none"}
-          onClick={toggleDescription}
-          style={{ cursor: "pointer" }}
-        >
-          {description.length > 100
-            ? `${description.substring(0, 100)}...`
+        <div onClick={toggleDescription} style={{ cursor: "pointer" }}>
+          {isDescriptionCollapsed
+            ? description.length > 100
+              ? `${description.substring(0, 100)}...`
+              : description
             : description}{" "}
-          <i className="bi bi-chevron-down"></i>
-        </div>
-        <div
-          id="boardDescriptionExpanded"
-          className={isDescriptionCollapsed ? "d-none" : ""}
-          onClick={toggleDescription}
-          style={{ cursor: "pointer" }}
-        >
-          {description} <i className="bi bi-chevron-up"></i>
+          <i
+            className={`bi bi-chevron-${isDescriptionCollapsed ? "down" : "up"}`}
+          ></i>
         </div>
       </div>
 
@@ -164,36 +156,40 @@ const BoardShow = () => {
         >
           Add New Task
         </button>
+
         {/* Delete Board Button (for admin) */}
-        {tasks.length > 0 ? (
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              if (
-                window.confirm(
-                  `${board.name} board has tasks. Deleting this board will also delete all associated tasks. Are you sure you want to continue?`
-                )
-              ) {
-                handleDeleteBoard();
-              }
-            }}
-          >
-            Delete Board
-          </button>
-        ) : (
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              if (
-                window.confirm(`Are you sure you want to delete ${board.name}?`)
-              ) {
-                handleDeleteBoard();
-              }
-            }}
-          >
-            Delete Board
-          </button>
-        )}
+        {currentUser.role === "admin" &&
+          (tasks.length > 0 ? (
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `${board.name} board has tasks. Deleting this board will also delete all associated tasks. Are you sure you want to continue?`
+                  )
+                ) {
+                  handleDeleteBoard();
+                }
+              }}
+            >
+              Delete Board
+            </button>
+          ) : (
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `Are you sure you want to delete ${board.name}?`
+                  )
+                ) {
+                  handleDeleteBoard();
+                }
+              }}
+            >
+              Delete Board
+            </button>
+          ))}
       </div>
 
       {/* Tasks Table */}
@@ -290,12 +286,16 @@ const BoardShow = () => {
                 >
                   Edit
                 </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDeleteTask(task.id)}
-                >
-                  Delete
-                </button>
+                {/* Conditionally render delete task button based on role */}
+                {(currentUser.role === "admin" ||
+                  currentUser.role === "manager") && (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteTask(task.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </td>
             </tr>
           ))}

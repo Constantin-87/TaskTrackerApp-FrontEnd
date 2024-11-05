@@ -51,9 +51,13 @@ const AdminPage = () => {
     navigate(`/users/${user.id}/edit`);
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (userId, firstName, lastName) => {
     const token = await getAccessToken();
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete " + firstName + " " + lastName + "?"
+      )
+    ) {
       try {
         await axios.delete(`/api/users/${userId}`, {
           headers: {
@@ -111,7 +115,9 @@ const AdminPage = () => {
                 </button>
                 <button
                   className="btn btn-outline-danger"
-                  onClick={() => handleDeleteUser(user.id)}
+                  onClick={() =>
+                    handleDeleteUser(user.id, user.first_name, user.last_name)
+                  }
                 >
                   Delete
                 </button>
