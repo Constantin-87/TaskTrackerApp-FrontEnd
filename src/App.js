@@ -69,8 +69,6 @@ function App() {
     setError(null);
     try {
       await loginUser(email, password);
-      const user = getCurrentUser();
-      console.log("User after login:", user);
       setCurrentUser(getCurrentUser());
       fetchBoards();
     } catch (err) {
@@ -93,7 +91,8 @@ function App() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  console.log("App currentUser  before sidebar:", currentUser);
+  console.log("App currentUser before sidebar:", currentUser.firstName);
   return (
     <Router>
       <div className="container-fluid min-vh-100 bg-dark">

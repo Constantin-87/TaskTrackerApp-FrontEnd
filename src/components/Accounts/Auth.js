@@ -24,14 +24,15 @@ export const loginUser = async (email, password) => {
       response.data.refresh_token &&
       response.data.resource_owner
     ) {
-      const { token, refresh_token, expires_in } = response.data;
+      const { token, refresh_token, expires_in, role, first_name, last_name } =
+        response.data;
       const expirationTime = Date.now() + expires_in * 1000; // Calculate expiration time in ms
 
       const user = {
         ...response.data.resource_owner,
-        role: response.data.role,
-        firstName: response.data.resource_owner.first_name,
-        lastName: response.data.resource_owner.last_name,
+        role: role,
+        firstName: first_name,
+        lastName: last_name,
       };
 
       console.log("Token:", token, "User:", user); // Log token and formatted user
@@ -108,5 +109,6 @@ export const isAuthenticated = () => {
 // Get the current user
 export const getCurrentUser = () => {
   const user = localStorage.getItem(CURRENT_USER_KEY);
+  console.log("auth CURRENT_USER_KEY:", user);
   return user ? JSON.parse(user) : null;
 };
