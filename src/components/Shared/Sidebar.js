@@ -37,7 +37,7 @@ const Sidebar = ({ currentUser, boards, logoutUser }) => {
   }, []);
 
   return (
-    <nav id="sidebarMenu" className="d-md-block bg-dark sidebar collapse">
+    <nav id="sidebarMenu" className="d-md-block bg-dark">
       <div className="position-sticky pt-3" style={{ overflowY: "auto" }}>
         {/* User info */}
         <h5 className="text-center text-light mb-4">

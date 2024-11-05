@@ -94,7 +94,7 @@ const CreateBoard = () => {
 
   return (
     <div>
-      <h1>Create New Board</h1>
+      <h1 className="display-4 text-left text-light mb-4">Create New Board</h1>
 
       {/* Display Flash Message */}
       {flashMessage && <FlashMessage message={flashMessage} />}

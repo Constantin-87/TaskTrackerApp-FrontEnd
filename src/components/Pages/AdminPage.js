@@ -75,7 +75,7 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page">
-      <h1 className="display-4 text-center text-light mb-4">User Management</h1>
+      <h1 className="display-4 text-left text-light mb-4">User Management</h1>
 
       {/* FlashMessage displayed on successful user deletion */}
       {showSuccessMessage && (

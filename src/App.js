@@ -7,6 +7,7 @@ import {
   Routes,
   Navigate,
   Outlet,
+  useLocation,
 } from "react-router-dom";
 import axios from "axios";
 import Login from "./components/Accounts/Login";
@@ -96,14 +97,19 @@ function App() {
   const AuthenticatedLayout = () => (
     <div className="container-fluid">
       <div className="row">
-        <div className="sidebar">
-          <Sidebar
-            currentUser={currentUser}
-            boards={boards}
-            logoutUser={handleLogout}
-          />
-        </div>
-        <div className="main-content">
+        {/* Only render Sidebar if the user is authenticated */}
+        {currentUser && (
+          <div className="sidebar">
+            <Sidebar
+              currentUser={currentUser}
+              boards={boards}
+              logoutUser={handleLogout}
+            />
+          </div>
+        )}
+        <div
+          className={`main-content ${!currentUser ? "full-width-content" : ""}`}
+        >
           {error && <ErrorMessage message={error} />}
           <Notifications />
           <Outlet />

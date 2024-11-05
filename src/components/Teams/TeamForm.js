@@ -150,7 +150,9 @@ const TeamForm = () => {
 
   return (
     <div>
-      <h1>{id ? "Edit Team" : "Create New Team"}</h1>
+      <h1 className="display-4 text-left text-light mb-4">
+        {id ? "Edit Team" : "Create New Team"}
+      </h1>
       {error && <ErrorMessage message={error} />}
       {flashMessage && <FlashMessage message={flashMessage} />}
       <form

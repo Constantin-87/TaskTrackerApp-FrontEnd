@@ -51,7 +51,7 @@ const TeamsList = () => {
 
   return (
     <div>
-      <h1 className="display-4 text-center mb-4">Teams Management</h1>
+      <h1 className="display-4 text-left text-light mb-4">Manage Teams</h1>
       {error && <ErrorMessage message={error} />}
       {flashMessage && <FlashMessage message={flashMessage} />}
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -81,13 +81,13 @@ const TeamsList = () => {
               <td>{team.boards_count} boards</td>
               <td className="text-center">
                 <button
-                  className="btn btn-warning me-2"
+                  className="btn btn-outline-warning me-2"
                   onClick={() => navigate(`/teams/${team.id}/edit`)}
                 >
                   Edit
                 </button>
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-outline-danger me-2"
                   onClick={() => handleDelete(team.id)}
                 >
                   Delete

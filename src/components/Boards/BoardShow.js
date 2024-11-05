@@ -125,7 +125,7 @@ const BoardShow = () => {
 
   return (
     <div>
-      <h1 className="display-4 text-center text-light mb-4">{board.name}</h1>
+      <h1 className="display-4 text-left text-light mb-4">{board.name}</h1>
 
       {/* FlashMessage displayed on successful user deletion */}
       {flashMessage && <FlashMessage message={flashMessage} />}
@@ -281,7 +281,7 @@ const BoardShow = () => {
               {/* Edit and Delete Actions */}
               <td className="text-center">
                 <button
-                  className="btn btn-warning me-2"
+                  className="btn btn-outline-warning me-2"
                   onClick={() => navigate(`/tasks/${task.id}/edit`)}
                 >
                   Edit
@@ -290,7 +290,7 @@ const BoardShow = () => {
                 {(currentUser.role === "admin" ||
                   currentUser.role === "manager") && (
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-outline-danger me-2"
                     onClick={() => handleDeleteTask(task.id)}
                   >
                     Delete

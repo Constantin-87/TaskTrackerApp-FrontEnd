@@ -126,7 +126,7 @@ const UserForm = ({
   };
   return (
     <div className="bg-dark text-light p-4 rounded shadow">
-      <h2 className="text-center mb-4">
+      <h2 className="display-4 text-left text-light mb-4">
         {isEditMode
           ? `Edit User - ${user.first_name || ""} ${user.last_name || ""}`
           : isAdmin

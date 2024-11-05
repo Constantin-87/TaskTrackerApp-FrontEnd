@@ -67,7 +67,7 @@ const Home = () => {
 
   return (
     <div className="task-content-container">
-      <h1 className="display-4 text-center text-light mb-4">Your Tasks</h1>
+      <h1 className="display-4 text-left text-light mb-4">Your Tasks</h1>
       {error && <p className="text-danger">{error}</p>}
       {tasks.length > 0 ? (
         <div className="accordion" id="tasksAccordion">
