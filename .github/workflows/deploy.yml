@@ -42,6 +42,7 @@ jobs:
             set -e
             cd ${EC2_PATH_FRONTEND}
             sudo systemctl restart nginx
+            sudo systemctl restart puma
           EOF
         shell: bash
 

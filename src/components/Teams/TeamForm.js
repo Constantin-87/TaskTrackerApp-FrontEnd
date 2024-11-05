@@ -80,6 +80,19 @@ const TeamForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
+    // Frontend validation for name and description
+    if (name.length < 2 || name.length > 20) {
+      setError("Team name must be between 2 and 20 characters.");
+      return;
+    }
+
+    if (description.length < 20 || description.length > 500) {
+      setError("Description must be between 20 and 500 characters.");
+      return;
+    }
+
     try {
       const token = await getAccessToken();
 
