@@ -92,7 +92,7 @@ function App() {
     return <div>Loading...</div>;
   }
   console.log("App currentUser  before sidebar:", currentUser);
-  console.log("App currentUser before sidebar:", currentUser.firstName);
+
   return (
     <Router>
       <div className="container-fluid min-vh-100 bg-dark">
