@@ -1,38 +1,49 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* Apply background color to the entire page */
+body,
+html {
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
+  background-color: #1f2a35; /* Light background color */
+}
+
+/* General container styling */
+.container-fluid {
   display: flex;
+  min-width: 1200px; /* Ensures horizontal scroll when screen is narrower */
   flex-direction: column;
+  background-color: #1f2a35; /* Light background for main content */
+  min-height: 100vh;
+}
+.row {
+  display: flex;
+  flex-direction: row; /* Ensure content flows horizontally */
+  width: 100%;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 20%; /* Sidebar takes 20% of screen width */
+  min-width: 200px; /* Minimum width of the sidebar */
+  background-color: #1f2a35; /* Dark background for sidebar */
+  color: #ffffff; /* Light text color */
+  padding: 1rem;
+  overflow-y: auto; /* Enables vertical scroll if content exceeds sidebar height */
+}
+
+/* Main content area styling */
+.main-content {
+  width: 80%; /* Main content takes the remaining 80% */
+  overflow-x: auto; /* Allows horizontal scroll when needed */
+  padding: 1rem;
+}
+
+/* If the user is not logged in, make main content full width and center it */
+.full-width-content {
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  height: 100vh; /* Center content vertically on full screen */
+  background-color: #1f2a35;
 }
