@@ -23,6 +23,11 @@ const CreateAccount = () => {
 
   const handleCreateUser = async (formData) => {
     try {
+      // Determine the endpoint based on whether the request is from the AdminPage
+      const endpoint = fromAdminPage
+        ? "/api/users"
+        : "/api/users/tokens/sign_up";
+
       // Define headers and include token only if isAdmin is true and token is available
       const headers = isAdmin
         ? { Authorization: `Bearer ${await getAccessToken()}` }
@@ -31,7 +36,7 @@ const CreateAccount = () => {
       console.log("Form Data being sent:", formData); // Log form data
 
       const response = await axios.post(
-        `/api/users/tokens/sign_up`,
+        endpoint,
         { user: formData },
         { headers }
       );
