@@ -7,7 +7,6 @@ import {
   Routes,
   Navigate,
   Outlet,
-  useLocation,
 } from "react-router-dom";
 import axios from "axios";
 import Login from "./components/Accounts/Login";
@@ -94,10 +93,10 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  const AuthenticatedLayout = () => (
+  const LayoutWithSidebar = () => (
     <div className="container-fluid">
       <div className="row">
-        {/* Only render Sidebar if the user is authenticated */}
+        {/* Conditionally render Sidebar if currentUser exists */}
         {currentUser && (
           <div className="sidebar">
             <Sidebar
@@ -107,9 +106,7 @@ function App() {
             />
           </div>
         )}
-        <div
-          className={`main-content ${!currentUser ? "full-width-content" : ""}`}
-        >
+        <div className="main-content">
           {error && <ErrorMessage message={error} />}
           <Notifications />
           <Outlet />
@@ -118,35 +115,19 @@ function App() {
     </div>
   );
 
-  const UnauthenticatedLayout = () => (
-    <div className="main-content full-width-content">
-      <Outlet />
-    </div>
-  );
-
-  const ProtectedRoute = ({ children }) => {
-    return currentUser ? children : <Navigate to="/login" />;
-  };
-
-  const AdminRoute = ({ children }) => {
-    return currentUser?.role === "admin" ? children : <Navigate to="/login" />;
-  };
-
   return (
     <Router>
       <Routes>
-        {/* Routes for unauthenticated users */}
-        <Route element={<UnauthenticatedLayout />}>
+        {/* Unauthenticated routes */}
+        <Route element={<LayoutWithSidebar />}>
           <Route path="/login" element={<Login loginUser={handleLogin} />} />
           <Route path="/signup" element={<CreateAccount />} />
         </Route>
 
-        {/* Routes for authenticated users */}
+        {/* Authenticated routes */}
         <Route
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout />
-            </ProtectedRoute>
+            currentUser ? <LayoutWithSidebar /> : <Navigate to="/login" />
           }
         >
           <Route path="/home" element={<Home />} />
@@ -170,9 +151,11 @@ function App() {
           <Route
             path="/admin"
             element={
-              <AdminRoute>
+              currentUser?.role === "admin" ? (
                 <AdminPage />
-              </AdminRoute>
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
 
