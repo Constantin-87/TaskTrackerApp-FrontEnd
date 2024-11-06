@@ -1,6 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import App from "./App";
 
+// Mock the getAccessToken function to prevent actual token checks in tests
+jest.mock("./components/Accounts/Auth", () => ({
+  ...jest.requireActual("./components/Accounts/Auth"),
+  getAccessToken: jest.fn().mockResolvedValue("fake_access_token"),
+}));
+
 test("renders login page by default", () => {
   render(<App />);
 

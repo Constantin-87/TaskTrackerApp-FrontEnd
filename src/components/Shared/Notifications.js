@@ -11,38 +11,41 @@ const Notifications = () => {
   useEffect(() => {
     // Define an async function to initialize WebSocket
     const initializeWebSocket = async () => {
-      const token = await getAccessToken();
+      try {
+        const token = await getAccessToken();
 
-      // Ensure token is available before initializing WebSocket
-      if (!token) {
-        console.error(
-          "Token not available. Unable to establish WebSocket connection."
-        );
-        return;
+        // Ensure token is available before initializing WebSocket
+        if (!token) {
+          console.error(
+            "Token not available. Unable to establish WebSocket connection."
+          );
+          return;
+        }
+
+        // Establish WebSocket connection with the token included in the URL
+        const ws = new WebSocket(`/api/notifications?token=${token}`);
+
+        ws.onopen = () => {
+          console.log("Connected to WebSocket for notifications");
+        };
+
+        ws.onmessage = (event) => {
+          const newNotification = JSON.parse(event.data);
+          setNotifications((prev) => [newNotification, ...prev]);
+        };
+
+        ws.onclose = () => {
+          console.log("WebSocket connection closed");
+        };
+
+        // Close WebSocket connection when component unmounts
+        return () => {
+          ws.close();
+        };
+      } catch (error) {
+        console.error("Error initializing WebSocket:", error);
       }
-
-      // Establish WebSocket connection with the token included in the URL
-      const ws = new WebSocket(`/api/notifications?token=${token}`);
-
-      ws.onopen = () => {
-        console.log("Connected to WebSocket for notifications");
-      };
-
-      ws.onmessage = (event) => {
-        const newNotification = JSON.parse(event.data);
-        setNotifications((prev) => [newNotification, ...prev]);
-      };
-
-      ws.onclose = () => {
-        console.log("WebSocket connection closed");
-      };
-
-      // Close WebSocket connection when component unmounts
-      return () => {
-        ws.close();
-      };
     };
-
     initializeWebSocket();
   }, []);
 
