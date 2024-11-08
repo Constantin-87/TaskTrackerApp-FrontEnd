@@ -54,7 +54,7 @@ function App() {
       console.log("Using token for fetchBoards:", token);
       if (!token) return;
 
-      const response = await axios.get("/api/boards", {
+      const response = await axios.get("http://127.0.0.1:4000/api/boards", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -67,13 +67,13 @@ function App() {
   };
 
   const handleLogin = async (email, password) => {
-    setError(null);
     try {
       await loginUser(email, password);
       setCurrentUser(getCurrentUser());
       fetchBoards();
+      return null;
     } catch (err) {
-      setError(err.message);
+      return "Invalid login credentials";
     }
   };
 

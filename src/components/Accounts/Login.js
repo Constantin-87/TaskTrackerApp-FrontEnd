@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
 
 const Login = ({ loginUser }) => {
   const [email, setEmail] = useState("");
@@ -9,11 +10,11 @@ const Login = ({ loginUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await loginUser(email, password);
+    const errorMessage = await loginUser(email, password);
+    if (errorMessage) {
+      setError(errorMessage);
+    } else {
       navigate("/home");
-    } catch (err) {
-      setError("Invalid login credentials");
     }
   };
 
@@ -37,9 +38,19 @@ const Login = ({ loginUser }) => {
         className="bg-dark text-light p-4 rounded shadow"
         style={{ width: "600px" }}
       >
-        <h2 className="display-4 text-left text-light mb-4">Login</h2>
+        {/* Flex container for logo and heading */}
+        <div className="d-flex align-items-center mb-4">
+          <img
+            src={logo}
+            alt="TaskTracker Logo"
+            style={{ width: "50px", marginRight: "15px" }}
+          />
+          <h2 className="display-5 text-left text-light mb-0">Login</h2>
+        </div>
 
-        {error && <p className="text-danger">{error}</p>}
+        {error && (
+          <div className="alert alert-danger text-center mb-4">{error}</div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3">

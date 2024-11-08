@@ -14,12 +14,12 @@ const TeamsList = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        // Get the JWT token from sessionStorage
+        // Get the token from sessionStorage
         const token = await getAccessToken();
 
         const response = await axios.get(`/api/teams`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         });
         setTeams(response.data);
@@ -33,12 +33,11 @@ const TeamsList = () => {
   const handleDelete = async (teamId) => {
     if (window.confirm("Are you sure you want to delete this team?")) {
       try {
-        // Get the JWT token from sessionStorage
         const token = await getAccessToken();
 
         await axios.delete(`/api/teams/${teamId}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         });
         setTeams(teams.filter((team) => team.id !== teamId));

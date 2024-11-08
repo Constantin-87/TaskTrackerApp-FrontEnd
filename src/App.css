@@ -33,9 +33,10 @@ html {
 
 /* Main content area styling */
 .main-content {
-  width: 80%; /* Main content takes the remaining 80% */
+  width: 70%; /* Main content takes the remaining 80% */
   overflow-x: auto; /* Allows horizontal scroll when needed */
   padding: 1rem;
+  margin-right: 10%;
 }
 
 /* If the user is not logged in, make main content full width and center it */
@@ -46,4 +47,29 @@ html {
   justify-content: center;
   height: 100vh; /* Center content vertically on full screen */
   background-color: #1f2a35;
+}
+
+/* Styling for form container */
+.form-container {
+  width: 800px;
+  max-width: 90%;
+  align-self: flex-start;
+  margin-left: 0;
+}
+
+/* Form input fields */
+.form-control {
+  font-size: 16px; /* Make text more readable */
+}
+
+/* Buttons */
+.btn {
+  height: 45px;
+  font-size: 16px;
+}
+
+/* Adjust the input label spacing */
+.form-label {
+  font-weight: bold;
+  margin-bottom: 8px;
 }
