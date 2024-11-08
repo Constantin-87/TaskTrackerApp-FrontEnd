@@ -54,7 +54,7 @@ function App() {
       console.log("Using token for fetchBoards:", token);
       if (!token) return;
 
-      const response = await axios.get("http://127.0.0.1:4000/api/boards", {
+      const response = await axios.get("/api/boards", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

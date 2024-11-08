@@ -10,7 +10,7 @@ const CURRENT_USER_KEY = "currentUser";
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:4000/api/users/tokens/sign_in`,
+      `/api/users/tokens/sign_in`,
       { email, password },
       { headers: { "Content-Type": "application/json" } }
     );
@@ -58,7 +58,7 @@ const refreshAccessToken = async () => {
 
   try {
     const response = await axios.post(
-      `http://127.0.0.1:4000/api/users/tokens/refresh`,
+      `/api/users/tokens/refresh`,
       { refresh_token: refreshToken },
       { headers: { "Content-Type": "application/json" } }
     );

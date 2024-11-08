@@ -25,8 +25,8 @@ const CreateAccount = () => {
     try {
       // Determine the endpoint based on whether the request is from the AdminPage
       const endpoint = fromAdminPage
-        ? "http://127.0.0.1:4000/api/users"
-        : "http://127.0.0.1:4000/api/users/tokens/sign_up";
+        ? "/api/users"
+        : "/api/users/tokens/sign_up";
 
       // Define headers and include token only if isAdmin is true and token is available
       const headers = isAdmin
