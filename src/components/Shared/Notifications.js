@@ -53,7 +53,7 @@ const Notifications = ({ currentUser }) => {
       }
     };
     initializeWebSocket();
-  }, []);
+  }, [currentUser]);
 
   // Function to extract task ID from notification message
   const extractTaskId = (message) => {
