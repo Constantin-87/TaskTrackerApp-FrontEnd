@@ -86,6 +86,10 @@ export const getAccessToken = async () => {
   return localStorage.getItem("access_token");
 };
 
+export const updateCurrentUser = (user) => {
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+};
+
 // Check if the token is expired based on the expiration time
 const isTokenExpired = () => {
   const expirationTime = localStorage.getItem("expiration_time");
@@ -109,6 +113,5 @@ export const isAuthenticated = () => {
 // Get the current user
 export const getCurrentUser = () => {
   const user = localStorage.getItem(CURRENT_USER_KEY);
-  console.log("auth CURRENT_USER_KEY:", user);
   return user ? JSON.parse(user) : null;
 };

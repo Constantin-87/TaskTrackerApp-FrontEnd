@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom"; // Import useParams to get the user ID
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
-import { getAccessToken } from "./Auth";
+import { getAccessToken, updateCurrentUser } from "./Auth";
 
 const EditAccount = ({ currentUser, setCurrentUser }) => {
   const [user, setUser] = useState({});
@@ -59,14 +59,21 @@ const EditAccount = ({ currentUser, setCurrentUser }) => {
           },
         }
       );
+
       if (response.status === 200) {
+        const { role, first_name, last_name } = response.data;
+        const updatedUser = {
+          ...currentUser,
+          firstName: first_name,
+          lastName: last_name,
+          role: role,
+        };
+
+        updateCurrentUser(updatedUser);
+        setCurrentUser(updatedUser);
+
         // Show a success message
         setShowSuccessMessage(true);
-
-        // Update the currentUser state if editing the current user's account
-        if (parseInt(id, 10) === currentUser.id) {
-          setCurrentUser(response.data);
-        }
 
         // Redirect to the admin page after 3 seconds
         setTimeout(() => {

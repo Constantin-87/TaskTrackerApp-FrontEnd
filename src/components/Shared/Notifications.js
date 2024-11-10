@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,52 +8,80 @@ import {
 
 const Notifications = ({ currentUser }) => {
   const [notifications, setNotifications] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
   const navigate = useNavigate();
+  const wsRef = useRef(null);
+  const retryAttempts = useRef(0);
 
-  useEffect(() => {
-    if (!isAuthenticated() || !currentUser) {
-      console.log("User not authenticated, skipping WebSocket connection");
-      return;
-    }
-    // Initialize WebSocket
-    const initializeWebSocket = async () => {
-      try {
-        const token = await getAccessToken();
-
-        // Ensure token is available before initializing WebSocket
-        if (!token) {
-          console.error(
-            "Token not available. Unable to establish WebSocket connection."
-          );
-          return;
+  // WebSocket reconnection with exponential backoff
+  const reconnectWebSocket = useCallback(() => {
+    if (retryAttempts.current < 5) {
+      const delay = Math.pow(2, retryAttempts.current) * 1000;
+      setTimeout(() => {
+        console.log("Reconnecting WebSocket...");
+        if (isAuthenticated() && currentUser) {
+          setIsConnected(false); // Trigger reconnection
         }
+      }, delay);
+      retryAttempts.current += 1;
+    } else {
+      console.error("Max WebSocket reconnection attempts reached.");
+    }
+  }, [currentUser]);
 
-        // Establish WebSocket connection with the token included in the URL
-        const ws = new WebSocket(`/api/notifications?token=${token}`);
+  // Initialize WebSocket connection
+  const initializeWebSocket = useCallback(async () => {
+    try {
+      const token = await getAccessToken();
 
-        ws.onopen = () => {
-          console.log("Connected to WebSocket for notifications");
-        };
+      if (!token) {
+        console.error(
+          "Token not available. Unable to establish WebSocket connection."
+        );
+        return;
+      }
 
-        ws.onmessage = (event) => {
-          const newNotification = JSON.parse(event.data);
-          setNotifications((prev) => [newNotification, ...prev]);
-        };
+      wsRef.current = new WebSocket(`/api/notifications?token=${token}`);
 
-        ws.onclose = () => {
-          console.log("WebSocket connection closed");
-        };
+      wsRef.current.onopen = () => {
+        console.log("Connected to WebSocket");
+        setIsConnected(true);
+        retryAttempts.current = 0;
+      };
 
-        // Close WebSocket connection when component unmounts
-        return () => {
-          ws.close();
-        };
-      } catch (error) {
-        console.error("Error initializing WebSocket:", error);
+      wsRef.current.onmessage = (event) => {
+        const newNotification = JSON.parse(event.data);
+        setNotifications((prev) => [newNotification, ...prev]);
+      };
+
+      wsRef.current.onclose = () => {
+        console.log("WebSocket connection closed");
+        setIsConnected(false);
+        reconnectWebSocket(); // Attempt to reconnect
+      };
+
+      wsRef.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        wsRef.current.close();
+      };
+    } catch (error) {
+      console.error("Error initializing WebSocket:", error);
+    }
+  }, [reconnectWebSocket]);
+
+  // Effect to initialize WebSocket when currentUser changes
+  useEffect(() => {
+    if (isAuthenticated() && currentUser && !isConnected) {
+      initializeWebSocket();
+    }
+
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+        console.log("WebSocket closed on component unmount");
       }
     };
-    initializeWebSocket();
-  }, [currentUser]);
+  }, [currentUser, isConnected, initializeWebSocket]);
 
   // Function to extract task ID from notification message
   const extractTaskId = (message) => {
@@ -93,7 +121,11 @@ const Notifications = ({ currentUser }) => {
   }
 
   return (
-    <div className="position-fixed bottom-0 end-0 p-3" id="notification-box">
+    <div
+      className="position-fixed bottom-0 end-0 p-3"
+      id="notification-box"
+      style={{ zIndex: 1050 }}
+    >
       {notifications.map((notification) => (
         <div
           key={notification.id}

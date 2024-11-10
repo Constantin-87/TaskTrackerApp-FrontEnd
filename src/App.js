@@ -39,7 +39,6 @@ function App() {
 
   useEffect(() => {
     const user = getCurrentUser();
-    console.log("User retrieved on initial load:", user);
     if (user) {
       setCurrentUser(user);
       fetchBoards();
