@@ -162,7 +162,12 @@ function App() {
           {/* Edit user account */}
           <Route
             path="/users/:id/edit"
-            element={<EditAccount currentUser={currentUser} />}
+            element={
+              <EditAccount
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
           />
         </Route>
 

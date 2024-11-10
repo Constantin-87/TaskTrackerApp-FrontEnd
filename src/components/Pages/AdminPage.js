@@ -109,12 +109,24 @@ const AdminPage = () => {
               <td className="text-center">
                 <button
                   className="btn btn-outline-warning me-2"
+                  style={{
+                    height: "30px",
+                    width: "50px",
+                    padding: "0",
+                    margin: "5px 0",
+                  }}
                   onClick={() => handleEditButtonClick(user)}
                 >
                   Edit
                 </button>
                 <button
-                  className="btn btn-outline-danger"
+                  className="btn btn-outline-danger me-2"
+                  style={{
+                    height: "30px",
+                    width: "55px",
+                    padding: "0",
+                    margin: "5px 0",
+                  }}
                   onClick={() =>
                     handleDeleteUser(user.id, user.first_name, user.last_name)
                   }

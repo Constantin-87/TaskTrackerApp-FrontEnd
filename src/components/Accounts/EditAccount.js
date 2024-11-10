@@ -6,7 +6,7 @@ import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
 import { getAccessToken } from "./Auth";
 
-const EditAccount = ({ currentUser }) => {
+const EditAccount = ({ currentUser, setCurrentUser }) => {
   const [user, setUser] = useState({});
   const { id } = useParams(); // Get the user ID from the URL
   const navigate = useNavigate();
@@ -62,6 +62,11 @@ const EditAccount = ({ currentUser }) => {
       if (response.status === 200) {
         // Show a success message
         setShowSuccessMessage(true);
+
+        // Update the currentUser state if editing the current user's account
+        if (parseInt(id, 10) === currentUser.id) {
+          setCurrentUser(response.data);
+        }
 
         // Redirect to the admin page after 3 seconds
         setTimeout(() => {

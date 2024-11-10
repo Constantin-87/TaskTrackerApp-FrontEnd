@@ -80,14 +80,24 @@ const TeamsList = () => {
               <td className="text-center">
                 <button
                   className="btn btn-outline-warning me-2"
-                  style={{ height: "30px", width: "50px", padding: "0" }}
+                  style={{
+                    height: "30px",
+                    width: "50px",
+                    padding: "0",
+                    margin: "5px 0",
+                  }}
                   onClick={() => navigate(`/teams/${team.id}/edit`)}
                 >
                   Edit
                 </button>
                 <button
                   className="btn btn-outline-danger me-2"
-                  style={{ height: "30px", width: "55px", padding: "0" }}
+                  style={{
+                    height: "30px",
+                    width: "55px",
+                    padding: "0",
+                    margin: "5px 0",
+                  }}
                   onClick={() => handleDelete(team.id)}
                 >
                   Delete
