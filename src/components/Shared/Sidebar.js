@@ -9,8 +9,8 @@ const Sidebar = ({ currentUser, boards, logoutUser }) => {
   console.log("sidebar currentUser:", currentUser.firstName);
 
   const handleLogout = async () => {
-    await logoutUser(); // Execute the logout API call
-    navigate("/login"); // Navigate to login after logout
+    await logoutUser();
+    navigate("/login");
   };
 
   // State to manage the open/close state of accordions
@@ -182,7 +182,7 @@ const Sidebar = ({ currentUser, boards, logoutUser }) => {
           {/* Sign Out Link */}
           <li className="nav-item mt-4">
             <button
-              onClick={handleLogout} // Use the handleLogout here
+              onClick={handleLogout}
               className="nav-link text-light d-flex align-items-center bg-dark border-0"
               style={{ cursor: "pointer" }}
             >

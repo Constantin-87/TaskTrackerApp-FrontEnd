@@ -144,15 +144,21 @@ const TaskForm = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
-    <div>
-      <h1>{id ? "Edit Task" : "Create New Task"}</h1>
+    <div
+      className="bg-dark text-light p-4 rounded shadow form-container"
+      style={{ maxWidth: "600px" }}
+    >
+      <h1 className="display-6 text-left text-light mb-4">
+        {id ? "Edit Task" : "Create New Task"}
+      </h1>
       {error && <ErrorMessage message={error} />}
       {flashMessage && <FlashMessage message={flashMessage} />}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-dark text-light p-4 rounded shadow"
-      >
+      <form onSubmit={handleSubmit}>
         <div className="form-group mb-3">
           <label className="form-label">Title</label>
           <input
@@ -161,7 +167,24 @@ const TaskForm = () => {
             onChange={(e) => setTitle(e.target.value)}
             className="form-control bg-secondary text-light"
             placeholder="Enter task title"
+            style={{ maxWidth: "300px", fontSize: "20px" }}
           />
+        </div>
+        <div className="form-group mb-3">
+          <label className="form-label">Board</label>
+          <select
+            value={boardId}
+            onChange={(e) => setBoardId(e.target.value)}
+            className="form-control bg-secondary text-light"
+            style={{ maxWidth: "300px", fontSize: "20px" }}
+          >
+            <option value="">Select a Board</option>
+            {boards.map((board) => (
+              <option key={board.id} value={board.id}>
+                {board.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group mb-3">
           <label className="form-label">Description</label>
@@ -173,59 +196,64 @@ const TaskForm = () => {
             placeholder="Task description"
           />
         </div>
-        <div className="form-group mb-3">
-          <label className="form-label">Due Date</label>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="form-control bg-secondary text-light"
-          />
+
+        <div className="d-flex justify-content-between mb-3">
+          <div className="form-group" style={{ flex: 1, marginRight: "10px" }}>
+            <label className="form-label">Due Date</label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="form-control bg-secondary text-light"
+              style={{ maxWidth: "170px", fontSize: "20px" }}
+            />
+          </div>
+
+          <div className="form-group" style={{ flex: 1, marginLeft: "10px" }}>
+            <label className="form-label">Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="form-control bg-secondary text-light"
+              style={{ maxWidth: "170px", fontSize: "20px" }}
+            >
+              {Object.entries(statuses).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value} {/* Display human-readable label */}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group" style={{ flex: 1, marginLeft: "10px" }}>
+            <label className="form-label">Priority</label>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="form-control bg-secondary text-light"
+              style={{ maxWidth: "150px", fontSize: "20px" }}
+            >
+              {Object.entries(priorities).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value} {/* Display human-readable label */}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="form-group mb-3">
-          <label className="form-label">Status</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="form-control bg-secondary text-light"
-          >
-            {Object.entries(statuses).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value} {/* Display human-readable label */}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group mb-3">
-          <label className="form-label">Priority</label>
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            className="form-control bg-secondary text-light"
-          >
-            {Object.entries(priorities).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value} {/* Display human-readable label */}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group mb-3">
-          <label className="form-label">Board</label>
-          <select
-            value={boardId}
-            onChange={(e) => setBoardId(e.target.value)}
-            className="form-control bg-secondary text-light"
-          >
-            <option value="">Select a Board</option>
-            {boards.map((board) => (
-              <option key={board.id} value={board.id}>
-                {board.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">
+
+        <button
+          type="button"
+          className="btn btn-secondary mb-4"
+          onClick={handleBack}
+        >
+          Back
+        </button>
+        <button
+          type="submit"
+          className="btn btn-primary mb-4"
+          style={{ marginLeft: "20px" }}
+        >
           {id ? "Update Task" : "Create Task"}
         </button>
       </form>

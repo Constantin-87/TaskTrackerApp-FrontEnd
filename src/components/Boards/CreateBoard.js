@@ -21,15 +21,14 @@ const CreateBoard = () => {
         const token = await getAccessToken();
         const response = await axios.get(`/api/teams`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the request headers
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        // Set teams from the response (as it's returned directly)
+        // Set teams from the response
         setTeams(response.data);
       } catch (err) {
         if (err.response && err.response.data && err.response.data.errors) {
-          // Display the detailed error message from the server
           setError(err.response.data.errors.join("\n"));
         } else {
           setError("Error fetching teams");
@@ -71,7 +70,7 @@ const CreateBoard = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the headers
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -81,7 +80,7 @@ const CreateBoard = () => {
 
       // Redirect to the new board page after 3 seconds
       setTimeout(() => {
-        navigate(`/boards/${response.data.board.id}`); // Redirect to the new board's page
+        navigate(`/boards/${response.data.board.id}`);
       }, 3000);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
@@ -92,8 +91,15 @@ const CreateBoard = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
-    <div>
+    <div
+      className="bg-dark text-light p-4 rounded shadow form-container"
+      style={{ maxWidth: "600px" }}
+    >
       <h1 className="display-4 text-left text-light mb-4">Create New Board</h1>
 
       {/* Display Flash Message */}
@@ -102,10 +108,7 @@ const CreateBoard = () => {
       {/* ErrorMessage component to display errors */}
       {error && <ErrorMessage message={error} />}
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-dark text-light p-4 rounded shadow"
-      >
+      <form onSubmit={handleSubmit}>
         <div className="form-group mb-3">
           <label className="form-label">Board Name</label>
           <input
@@ -114,19 +117,7 @@ const CreateBoard = () => {
             onChange={(e) => setName(e.target.value)}
             className="form-control bg-secondary text-light"
             placeholder="Enter board title"
-            style={{ width: "250px" }}
-          />
-        </div>
-
-        <div className="form-group mb-3">
-          <label className="form-label">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="form-control bg-secondary text-light"
-            rows="5"
-            placeholder="Board description"
-            style={{ width: "500px" }}
+            style={{ maxWidth: "300px", fontSize: "20px" }}
           />
         </div>
 
@@ -136,6 +127,7 @@ const CreateBoard = () => {
             value={teamId}
             onChange={(e) => setTeamId(e.target.value)}
             className="form-control bg-secondary text-light"
+            style={{ maxWidth: "300px", fontSize: "20px" }}
           >
             <option value="">Select a Team</option>
             {teams.map((team) => (
@@ -146,7 +138,31 @@ const CreateBoard = () => {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <div className="form-group mb-3">
+          <label className="form-label">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="form-control bg-secondary text-light"
+            rows="5"
+            placeholder="Board description"
+            style={{ width: "500px", fontSize: "20px" }}
+          />
+        </div>
+
+        <button
+          type="button"
+          className="btn btn-secondary mb-4"
+          onClick={handleBack}
+        >
+          Back
+        </button>
+
+        <button
+          type="submit"
+          className="btn btn-primary mb-4"
+          style={{ marginLeft: "20px" }}
+        >
           Create Board
         </button>
       </form>

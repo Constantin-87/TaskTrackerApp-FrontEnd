@@ -5,7 +5,7 @@ const ErrorMessage = ({ message }) => {
 
   // Reset the visibility whenever a new message is passed
   useEffect(() => {
-    setVisible(true); // Ensure visibility is reset whenever message changes
+    setVisible(true);
   }, [message]);
 
   if (!visible || !message) return null; // Hide the error message if dismissed or no message

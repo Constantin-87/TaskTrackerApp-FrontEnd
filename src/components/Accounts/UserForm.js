@@ -43,7 +43,6 @@ const UserForm = ({
         try {
           const response = await axios.get(`/api/users`, {
             headers: { Authorization: `Bearer ${token}` },
-            withCredentials: true,
           });
           setRoles(response.data.roles);
         } catch (error) {
@@ -245,20 +244,19 @@ const UserForm = ({
         )}
 
         <button
-          type="submit"
-          className="btn btn-primary mb-4"
-          style={{ marginRight: "20px" }}
-        >
-          {isEditMode ? "Update User" : isAdmin ? "Add User" : "Sign Up"}
-        </button>
-
-        {/* Back button to return to the previous page */}
-        <button
           type="button"
           className="btn btn-secondary mb-4"
           onClick={handleBack}
         >
           Back
+        </button>
+
+        <button
+          type="submit"
+          className="btn btn-primary mb-4"
+          style={{ marginLeft: "20px" }}
+        >
+          {isEditMode ? "Update User" : isAdmin ? "Add User" : "Sign Up"}
         </button>
       </form>
     </div>

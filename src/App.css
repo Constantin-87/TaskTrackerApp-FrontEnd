@@ -33,7 +33,7 @@ html {
 
 /* Main content area styling */
 .main-content {
-  width: 70%; /* Main content takes the remaining 80% */
+  width: 70%; /* Main content takes the remaining 70% */
   overflow-x: auto; /* Allows horizontal scroll when needed */
   padding: 1rem;
   margin-right: 10%;
@@ -59,7 +59,7 @@ html {
 
 /* Form input fields */
 .form-control {
-  font-size: 16px; /* Make text more readable */
+  font-size: 16px;
 }
 
 /* Buttons */

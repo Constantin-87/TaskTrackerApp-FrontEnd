@@ -216,10 +216,17 @@ const BoardShow = () => {
                   placement="top"
                   overlay={renderTooltip({ description: task.description })}
                 >
-                  <span>
-                    {task.description.length > 60
-                      ? `${task.description.substring(0, 60)}...`
-                      : task.description}
+                  <span
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxHeight: "3.6em",
+                    }}
+                  >
+                    {task.description}
                   </span>
                 </OverlayTrigger>
               </td>
@@ -279,9 +286,10 @@ const BoardShow = () => {
               </td>
 
               {/* Edit and Delete Actions */}
-              <td className="text-center">
+              <td className="text-center d-flex justify-content-center align-items-center">
                 <button
                   className="btn btn-outline-warning me-2"
+                  style={{ height: "40px", width: "50px", padding: "0" }}
                   onClick={() => navigate(`/tasks/${task.id}/edit`)}
                 >
                   Edit
@@ -291,6 +299,7 @@ const BoardShow = () => {
                   currentUser.role === "manager") && (
                   <button
                     className="btn btn-outline-danger me-2"
+                    style={{ height: "40px", width: "55px", padding: "0" }}
                     onClick={() => handleDeleteTask(task.id)}
                   >
                     Delete

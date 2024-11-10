@@ -34,7 +34,6 @@ const EditAccount = ({ currentUser }) => {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
           },
-          withCredentials: true, // Ensure credentials are sent with the request
         });
         setUser(response.data);
       } catch (error) {
@@ -58,7 +57,6 @@ const EditAccount = ({ currentUser }) => {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
           },
-          withCredentials: true, // Ensure credentials are sent with the request
         }
       );
       if (response.status === 200) {

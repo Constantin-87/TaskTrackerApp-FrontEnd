@@ -108,7 +108,7 @@ function App() {
         )}
         <div className="main-content">
           {error && <ErrorMessage message={error} />}
-          <Notifications />
+          <Notifications currentUser={currentUser} />
           <Outlet />
         </div>
       </div>

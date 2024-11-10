@@ -37,7 +37,7 @@ describe("Login Component", () => {
     const passwordInput = screen.getByPlaceholderText("Password");
     const loginButton = screen.getByRole("button", { name: /login/i });
 
-    // Perform fireEvent actions without wrapping them in act
+    // Perform fireEvent actions
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(loginButton);

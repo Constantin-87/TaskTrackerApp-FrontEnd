@@ -111,7 +111,7 @@ const TeamForm = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include the JWT token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -124,7 +124,7 @@ const TeamForm = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include the JWT token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -148,8 +148,12 @@ const TeamForm = () => {
     setFrom(from.filter((item) => !selectedIds.includes(item.id.toString())));
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
-    <div>
+    <div style={{ maxWidth: "800px" }}>
       <h1 className="display-4 text-left text-light mb-4">
         {id ? "Edit Team" : "Create New Team"}
       </h1>
@@ -166,6 +170,7 @@ const TeamForm = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="form-control bg-secondary text-light"
+            style={{ maxWidth: "300px", fontSize: "20px" }}
             placeholder="Enter team name"
           />
         </div>
@@ -176,19 +181,21 @@ const TeamForm = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="form-control bg-secondary text-light"
+            style={{ maxWidth: "96%", fontSize: "20px" }}
             rows="5"
             placeholder="Enter team description"
           />
         </div>
 
         {/* Dual Listbox for Users */}
-        <div className="form-group mb-3">
-          <div className="row">
+        <div className="form-group mb-3 text-center">
+          <div className="row  justify-content-center align-items-center">
             <div className="col-md-5">
               <h6>Available Users</h6>
               <select
                 className="form-control bg-secondary text-light"
-                size="8"
+                style={{ fontSize: "18px" }}
+                size="5"
                 multiple
                 id="unassignedUsers"
               >
@@ -204,6 +211,7 @@ const TeamForm = () => {
               <button
                 type="button"
                 className="btn btn-success mb-2"
+                style={{ fontSize: "20px" }}
                 onClick={() => {
                   const selectedUsers =
                     document.getElementById("unassignedUsers").selectedOptions;
@@ -218,11 +226,12 @@ const TeamForm = () => {
                   }
                 }}
               >
-                Assign &gt;&gt;
+                Add
               </button>
               <button
                 type="button"
                 className="btn btn-danger"
+                style={{ fontSize: "20px" }}
                 onClick={() => {
                   const selectedUsers =
                     document.getElementById("assignedUsers").selectedOptions;
@@ -237,7 +246,7 @@ const TeamForm = () => {
                   }
                 }}
               >
-                &lt;&lt; Unassign
+                Remove
               </button>
             </div>
 
@@ -245,7 +254,8 @@ const TeamForm = () => {
               <h6>Assigned Users</h6>
               <select
                 className="form-control bg-secondary text-light"
-                size="8"
+                style={{ fontSize: "18px" }}
+                size="5"
                 multiple
                 id="assignedUsers"
               >
@@ -260,13 +270,14 @@ const TeamForm = () => {
         </div>
 
         {/* Boards selection similar to the above */}
-        <div className="form-group mb-3">
-          <div className="row">
+        <div className="form-group mb-3 text-center">
+          <div className="row  justify-content-center align-items-center">
             <div className="col-md-5">
               <h6>Available Boards</h6>
               <select
                 className="form-control bg-secondary text-light"
-                size="8"
+                style={{ fontSize: "18px" }}
+                size="5"
                 multiple
                 id="unassignedBoards"
               >
@@ -282,6 +293,7 @@ const TeamForm = () => {
               <button
                 type="button"
                 className="btn btn-success mb-2"
+                style={{ fontSize: "20px" }}
                 onClick={() => {
                   const selectedBoards =
                     document.getElementById("unassignedBoards").selectedOptions;
@@ -296,11 +308,12 @@ const TeamForm = () => {
                   }
                 }}
               >
-                Assign &gt;&gt;
+                Add
               </button>
               <button
                 type="button"
                 className="btn btn-danger"
+                style={{ fontSize: "20px" }}
                 onClick={() => {
                   const selectedBoards =
                     document.getElementById("assignedBoards").selectedOptions;
@@ -315,7 +328,7 @@ const TeamForm = () => {
                   }
                 }}
               >
-                &lt;&lt; Unassign
+                Remove
               </button>
             </div>
 
@@ -323,7 +336,8 @@ const TeamForm = () => {
               <h6>Assigned Boards</h6>
               <select
                 className="form-control bg-secondary text-light"
-                size="8"
+                style={{ fontSize: "18px" }}
+                size="5"
                 multiple
                 id="assignedBoards"
               >
@@ -337,7 +351,19 @@ const TeamForm = () => {
           </div>
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="button"
+          className="btn btn-secondary mb-4"
+          onClick={handleBack}
+        >
+          Back
+        </button>
+
+        <button
+          type="submit"
+          className="btn btn-primary  mb-4"
+          style={{ marginLeft: "20px" }}
+        >
           {id ? "Update Team" : "Create Team"}
         </button>
       </form>

@@ -18,7 +18,7 @@ const AdminPage = () => {
         setShowSuccessMessage(false);
       }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer);
     }
   }, [showSuccessMessage]);
 
@@ -61,7 +61,7 @@ const AdminPage = () => {
       try {
         await axios.delete(`/api/users/${userId}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Pass the JWT token in the headers
+            Authorization: `Bearer ${token}`,
           },
         });
         setUsers(users.filter((user) => user.id !== userId));

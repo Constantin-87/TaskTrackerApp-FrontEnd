@@ -19,7 +19,7 @@ const Login = ({ loginUser }) => {
   };
 
   const handleSignUp = () => {
-    // Redirect to CreateAccount page (state set to indicate it's from the login page)
+    // Redirect to CreateAccount page
     navigate("/signup");
   };
   return (

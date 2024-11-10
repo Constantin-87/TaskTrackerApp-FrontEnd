@@ -12,7 +12,7 @@ const BoardsList = () => {
     // Fetch boards from the backend
     const fetchBoards = async () => {
       try {
-        const token = getAccessToken(); // Retrieve the token
+        const token = getAccessToken();
         const response = await axios.get(`/api/boards`, {
           headers: {
             Authorization: `Bearer ${token}`,

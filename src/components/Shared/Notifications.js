@@ -1,15 +1,21 @@
-// src/components/Notifications.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { getAccessToken } from "../../components/Accounts/Auth";
+import {
+  getAccessToken,
+  isAuthenticated,
+} from "../../components/Accounts/Auth";
 
-const Notifications = () => {
+const Notifications = ({ currentUser }) => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Define an async function to initialize WebSocket
+    if (!isAuthenticated() || !currentUser) {
+      console.log("User not authenticated, skipping WebSocket connection");
+      return;
+    }
+    // Initialize WebSocket
     const initializeWebSocket = async () => {
       try {
         const token = await getAccessToken();
