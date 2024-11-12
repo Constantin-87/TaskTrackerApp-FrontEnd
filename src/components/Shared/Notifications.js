@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,80 +8,87 @@ import {
 
 const Notifications = ({ currentUser }) => {
   const [notifications, setNotifications] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
   const navigate = useNavigate();
   const wsRef = useRef(null);
   const retryAttempts = useRef(0);
+  const shouldReconnect = useRef(false);
 
-  // WebSocket reconnection with exponential backoff
-  const reconnectWebSocket = useCallback(() => {
-    if (retryAttempts.current < 5) {
-      const delay = Math.pow(2, retryAttempts.current) * 1000;
-      setTimeout(() => {
-        console.log("Reconnecting WebSocket...");
-        if (isAuthenticated() && currentUser) {
-          setIsConnected(false); // Trigger reconnection
-        }
-      }, delay);
-      retryAttempts.current += 1;
-    } else {
-      console.error("Max WebSocket reconnection attempts reached.");
-    }
-  }, [currentUser]);
-
-  // Initialize WebSocket connection
-  const initializeWebSocket = useCallback(async () => {
-    try {
-      const token = await getAccessToken();
-
-      if (!token) {
-        console.error(
-          "Token not available. Unable to establish WebSocket connection."
-        );
-        return;
-      }
-
-      wsRef.current = new WebSocket(`/api/notifications?token=${token}`);
-
-      wsRef.current.onopen = () => {
-        console.log("Connected to WebSocket");
-        setIsConnected(true);
-        retryAttempts.current = 0;
-      };
-
-      wsRef.current.onmessage = (event) => {
-        const newNotification = JSON.parse(event.data);
-        setNotifications((prev) => [newNotification, ...prev]);
-      };
-
-      wsRef.current.onclose = () => {
-        console.log("WebSocket connection closed");
-        setIsConnected(false);
-        reconnectWebSocket(); // Attempt to reconnect
-      };
-
-      wsRef.current.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        wsRef.current.close();
-      };
-    } catch (error) {
-      console.error("Error initializing WebSocket:", error);
-    }
-  }, [reconnectWebSocket]);
-
-  // Effect to initialize WebSocket when currentUser changes
   useEffect(() => {
-    if (isAuthenticated() && currentUser && !isConnected) {
+    if (!isAuthenticated() && !currentUser) {
+      return;
+    }
+
+    // Initialize WebSocket
+    const initializeWebSocket = async () => {
+      try {
+        const token = await getAccessToken();
+
+        // Ensure token is available before initializing WebSocket
+        if (!token) {
+          console.error(
+            "Token not available. Unable to establish WebSocket connection."
+          );
+          return;
+        }
+
+        wsRef.current = new WebSocket(`/api/notifications?token=${token}`);
+
+        wsRef.current.onopen = () => {
+          retryAttempts.current = 0;
+          shouldReconnect.current = true;
+        };
+
+        wsRef.current.onmessage = (event) => {
+          const newNotification = JSON.parse(event.data);
+          setNotifications((prev) => [newNotification, ...prev]);
+        };
+
+        wsRef.current.onclose = (event) => {
+          console.warn(event?.code, event?.reason);
+          if (shouldReconnect.current) {
+            handleReconnect(); // Attempt to reconnect
+          }
+        };
+
+        wsRef.current.onerror = (error) => {
+          console.error("WebSocket error:", error);
+          wsRef.current.close();
+        };
+      } catch (error) {
+        console.error("Error initializing WebSocket:", error);
+      }
+    };
+
+    if (isAuthenticated() && currentUser) {
+      shouldReconnect.current = true;
       initializeWebSocket();
     }
 
+    // Function to reconnect with exponential backoff
+    const handleReconnect = () => {
+      if (retryAttempts.current >= 10) {
+        console.error("Max WebSocket reconnection attempts reached.");
+        shouldReconnect.current = false;
+        return;
+      }
+
+      const delay = Math.pow(2, retryAttempts.current) * 1000;
+
+      setTimeout(() => {
+        if (isAuthenticated() && currentUser && shouldReconnect.current) {
+          initializeWebSocket(); // Trigger connection attempt
+          retryAttempts.current += 1;
+        }
+      }, delay);
+    };
+
     return () => {
+      shouldReconnect.current = false;
       if (wsRef.current) {
         wsRef.current.close();
-        console.log("WebSocket closed on component unmount");
       }
     };
-  }, [currentUser, isConnected, initializeWebSocket]);
+  }, [currentUser]);
 
   // Function to extract task ID from notification message
   const extractTaskId = (message) => {
