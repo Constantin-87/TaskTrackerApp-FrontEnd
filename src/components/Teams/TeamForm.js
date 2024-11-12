@@ -131,7 +131,7 @@ const TeamForm = () => {
         setFlashMessage("Team created successfully!");
       }
 
-      setTimeout(() => navigate("/teams"), 3000);
+      setTimeout(() => navigate("/teams"), 2000);
     } catch (err) {
       setError("Error saving the team.");
     }

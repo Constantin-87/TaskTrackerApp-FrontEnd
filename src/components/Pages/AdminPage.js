@@ -16,7 +16,7 @@ const AdminPage = () => {
     if (showSuccessMessage) {
       const timer = setTimeout(() => {
         setShowSuccessMessage(false);
-      }, 3000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
@@ -48,7 +48,7 @@ const AdminPage = () => {
 
   const handleEditButtonClick = (user) => {
     // Navigate to the edit page with the user ID
-    navigate(`/users/${user.id}/edit`);
+    navigate(`/users/${user.id}/edit`, { state: { fromAdminPage: true } });
   };
 
   const handleDeleteUser = async (userId, firstName, lastName) => {

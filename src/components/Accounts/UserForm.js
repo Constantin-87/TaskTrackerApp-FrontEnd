@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ErrorMessage from "../Shared/ErrorMessage";
 import { getAccessToken } from "./Auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const UserForm = ({
   user = {},
   onSubmit,
   isEditMode = false,
   isAdmin = false,
+  isCurrentUser = false,
 }) => {
   const [firstName, setFirstName] = useState(user.first_name || "");
   const [lastName, setLastName] = useState(user.last_name || "");
@@ -20,6 +21,8 @@ const UserForm = ({
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromAdminPage = location.state?.fromAdminPage || false;
 
   // Only pre-fill form fields if in edit mode and `user` data is available
   useEffect(() => {
@@ -32,7 +35,7 @@ const UserForm = ({
   }, [user, isEditMode]);
 
   const handleBack = () => {
-    navigate(-1); // Navigates back to the previous page
+    navigate(-1);
   };
 
   // Fetch roles once when the component mounts, only if the user is an admin
@@ -133,9 +136,11 @@ const UserForm = ({
     <div className="bg-dark text-light p-4 rounded shadow form-container">
       <h2 className="display-4 text-left text-light mb-4">
         {isEditMode
-          ? `Edit User - ${user.first_name || ""} ${user.last_name || ""}`
+          ? isCurrentUser
+            ? "Edit My Account"
+            : `Edit User - ${user.first_name || ""} ${user.last_name || ""}`
           : isAdmin
-            ? "Add User"
+            ? "Add New User"
             : "Sign Up"}
       </h2>
 
@@ -256,7 +261,15 @@ const UserForm = ({
           className="btn btn-primary mb-4"
           style={{ marginLeft: "20px" }}
         >
-          {isEditMode ? "Update User" : isAdmin ? "Add User" : "Sign Up"}
+          {isEditMode
+            ? fromAdminPage
+              ? "Update User"
+              : isCurrentUser
+                ? "Update My Account"
+                : "Update User"
+            : fromAdminPage
+              ? "Create User"
+              : "Sign Up"}
         </button>
       </form>
     </div>

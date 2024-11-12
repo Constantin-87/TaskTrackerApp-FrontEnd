@@ -79,7 +79,7 @@ const BoardShow = () => {
       setFlashMessage("Board deleted successfully!");
       setTimeout(() => {
         navigate("/home");
-      }, 3000);
+      }, 2000);
     } catch (err) {
       setError("Error deleting board.");
     }

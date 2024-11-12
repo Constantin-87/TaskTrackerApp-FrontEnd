@@ -1,5 +1,3 @@
-// src/components/Accounts/Auth.js
-
 import axios from "axios";
 
 const ACCESS_TOKEN_KEY = "access_token";
@@ -15,9 +13,7 @@ export const loginUser = async (email, password) => {
       { headers: { "Content-Type": "application/json" } }
     );
 
-    console.log("Login response:", response.data);
-
-    // Extract token and create user object with the expected structure
+    // Extract token and create user object
     if (
       response.data &&
       response.data.token &&
@@ -34,8 +30,6 @@ export const loginUser = async (email, password) => {
         firstName: first_name,
         lastName: last_name,
       };
-
-      console.log("Token:", token, "User:", user); // Log token and formatted user
 
       // Store tokens, expiration, and user information
       localStorage.setItem(ACCESS_TOKEN_KEY, token);
@@ -79,7 +73,6 @@ const refreshAccessToken = async () => {
 // Helper function to get the access token, refreshing it if needed
 export const getAccessToken = async () => {
   if (isTokenExpired()) {
-    console.log("Access token expired, refreshing...");
     return await refreshAccessToken();
   }
 
@@ -93,9 +86,9 @@ export const updateCurrentUser = (user) => {
 // Check if the token is expired based on the expiration time
 const isTokenExpired = () => {
   const expirationTime = localStorage.getItem("expiration_time");
-  if (!expirationTime) return true; // If no expiration time, consider it expired
+  if (!expirationTime) return true;
 
-  return Date.now() >= parseInt(expirationTime, 10); // Compare current time with expiration time
+  return Date.now() >= parseInt(expirationTime, 10);
 };
 
 // Logout function

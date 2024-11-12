@@ -131,7 +131,7 @@ const TaskForm = () => {
         setFlashMessage("Task created successfully!");
       }
 
-      setTimeout(() => navigate(`/boards/${boardId}`), 3000);
+      setTimeout(() => navigate(`/boards/${boardId}`), 2000);
     } catch (err) {
       // Check if the error response contains validation errors
       if (err.response && err.response.data && err.response.data.errors) {

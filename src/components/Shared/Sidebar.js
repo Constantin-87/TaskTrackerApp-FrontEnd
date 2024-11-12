@@ -5,8 +5,6 @@ import { getAccessToken } from "../Accounts/Auth";
 const Sidebar = ({ currentUser, boards, logoutUser }) => {
   const navigate = useNavigate();
   const [token, setToken] = useState(null);
-  console.log("sidebar currentUser:", currentUser);
-  console.log("sidebar currentUser:", currentUser.firstName);
 
   const handleLogout = async () => {
     await logoutUser();

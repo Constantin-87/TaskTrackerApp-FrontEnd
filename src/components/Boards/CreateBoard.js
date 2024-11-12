@@ -81,7 +81,7 @@ const CreateBoard = () => {
       // Redirect to the new board page after 3 seconds
       setTimeout(() => {
         navigate(`/boards/${response.data.board.id}`);
-      }, 3000);
+      }, 2000);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
         setError(err.response.data.errors.join("\n"));

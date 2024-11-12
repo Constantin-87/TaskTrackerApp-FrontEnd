@@ -50,7 +50,6 @@ function App() {
   const fetchBoards = async () => {
     try {
       const token = await getAccessToken();
-      console.log("Using token for fetchBoards:", token);
       if (!token) return;
 
       const response = await axios.get("/api/boards", {
@@ -120,7 +119,10 @@ function App() {
         {/* Unauthenticated routes */}
         <Route element={<LayoutWithSidebar />}>
           <Route path="/login" element={<Login loginUser={handleLogin} />} />
-          <Route path="/signup" element={<CreateAccount />} />
+          <Route
+            path="/signup"
+            element={<CreateAccount setCurrentUser={setCurrentUser} />}
+          />
         </Route>
 
         {/* Authenticated routes */}
