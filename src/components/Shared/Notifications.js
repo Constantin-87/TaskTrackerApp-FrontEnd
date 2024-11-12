@@ -51,12 +51,9 @@ const Notifications = ({ currentUser }) => {
         };
 
         wsRef.current.onerror = (error) => {
-          console.error("WebSocket error:", error);
           wsRef.current.close();
         };
-      } catch (error) {
-        console.error("Error initializing WebSocket:", error);
-      }
+      } catch (error) {}
     };
 
     if (isAuthenticated() && currentUser) {
