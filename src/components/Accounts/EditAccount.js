@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import ErrorMessage from "../Shared/ErrorMessage";
 import FlashMessage from "../Shared/FlashMessage";
-import { getAccessToken, updateCurrentUser, getCurrentUser } from "./Auth";
+import { getAccessToken, updateCurrentUser } from "./Auth";
 
 const EditAccount = ({ currentUser, setCurrentUser }) => {
   const [user, setUser] = useState({});
